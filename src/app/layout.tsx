@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 
 const SITE_URL = "https://everyday-nourish.vercel.app";
@@ -43,6 +44,7 @@ export default function RootLayout({
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">{children}</div>
         <Analytics />
       </body>
+      <GoogleAnalytics gaId="G-KWZ8KC3WWD" />
     </html>
   );
 }
