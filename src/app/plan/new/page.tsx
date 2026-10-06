@@ -58,10 +58,10 @@ export default function NewPlanPage() {
     const prefs: Preferences = {
       concerns: selectedConcerns,
       ingredientsOnHand,
-      household,
+      household: Math.max(1, household || 1),
       sex,
-      age,
-      weightKg,
+      age: Math.min(100, Math.max(18, age || 18)),
+      weightKg: Math.min(200, Math.max(30, weightKg || 30)),
       activityLevel,
     };
     savePreferences(prefs);
@@ -96,8 +96,9 @@ export default function NewPlanPage() {
                 type="number"
                 min={18}
                 max={100}
-                value={age}
-                onChange={(e) => setAge(Math.max(18, parseInt(e.target.value) || 18))}
+                value={age === 0 ? "" : age}
+                onChange={(e) => setAge(e.target.value === "" ? 0 : parseInt(e.target.value) || 0)}
+                onBlur={() => setAge((a) => Math.min(100, Math.max(18, a || 18)))}
                 className="w-20 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
               />
             </div>
@@ -107,8 +108,9 @@ export default function NewPlanPage() {
                 type="number"
                 min={30}
                 max={200}
-                value={weightKg}
-                onChange={(e) => setWeightKg(Math.max(30, parseInt(e.target.value) || 30))}
+                value={weightKg === 0 ? "" : weightKg}
+                onChange={(e) => setWeightKg(e.target.value === "" ? 0 : parseInt(e.target.value) || 0)}
+                onBlur={() => setWeightKg((w) => Math.min(200, Math.max(30, w || 30)))}
                 className="w-20 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
               />
             </div>
@@ -197,8 +199,9 @@ export default function NewPlanPage() {
           <input
             type="number"
             min={1}
-            value={household}
-            onChange={(e) => setHousehold(Math.max(1, parseInt(e.target.value) || 1))}
+            value={household === 0 ? "" : household}
+            onChange={(e) => setHousehold(e.target.value === "" ? 0 : parseInt(e.target.value) || 0)}
+            onBlur={() => setHousehold((h) => Math.max(1, h || 1))}
             className="w-24 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
           />
         </div>
