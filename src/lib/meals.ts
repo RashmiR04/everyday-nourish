@@ -26,7 +26,7 @@ const MEALS_BASE: Meal[] = [
       { name: "Curd", qty: "50g" },
     ],
     recipeSteps: [
-      "Whisk besan with water to a smooth batter.",
+      "Mix besan with water well until smooth, with no lumps.",
       "Stir in finely chopped vegetables, salt, and spices.",
       "Pour onto a hot tawa, cook both sides until golden.",
       "Serve with curd.",
@@ -59,7 +59,7 @@ const MEALS_BASE: Meal[] = [
     ],
     recipeSteps: [
       "Dry roast oats lightly, set aside.",
-      "Saute mustard seeds, curry leaves, and vegetables.",
+      "Fry mustard seeds, curry leaves, and vegetables briefly in oil.",
       "Add oats, water, and simmer till soft.",
       "Stir in ground flaxseed just before serving.",
     ],
@@ -200,8 +200,8 @@ const MEALS_BASE: Meal[] = [
       { name: "Whole wheat roti", qty: "2 pieces" },
     ],
     recipeSteps: [
-      "Blanch and puree spinach.",
-      "Saute onion-tomato masala, add spinach puree.",
+      "Boil the spinach briefly, then blend it smooth.",
+      "Fry the onion-tomato masala, then add the spinach paste.",
       "Add paneer cubes, simmer briefly.",
       "Serve with rotis.",
     ],
@@ -355,7 +355,7 @@ const MEALS_BASE: Meal[] = [
       { name: "Bottle gourd (lauki)", qty: "150g" },
     ],
     recipeSteps: [
-      "Knead jowar flour with warm water, pat into rotis, cook on a tawa.",
+      "Knead jowar flour with warm water, shape into rotis, cook on a tawa.",
       "Prepare lauki sabzi with light tempering.",
       "Serve together.",
     ],
@@ -417,7 +417,7 @@ const MEALS_BASE: Meal[] = [
       { name: "Curd (for raita)", qty: "80g" },
     ],
     recipeSteps: [
-      "Saute whole spices, add vegetables and rice, cook with measured water.",
+      "Fry whole spices briefly in oil, add vegetables and rice, cook with measured water.",
       "Prepare a simple cucumber-curd raita.",
       "Serve together.",
     ],
@@ -439,7 +439,7 @@ const MEALS_BASE: Meal[] = [
     ],
     recipeSteps: [
       "Boil soya chunks for 3-4 minutes, then squeeze out excess water.",
-      "Saute onion-tomato masala with ginger-garlic and spices until oil separates.",
+      "Fry the onion-tomato masala with ginger-garlic and spices until the oil separates out.",
       "Add soya chunks, simmer a few minutes to absorb the masala.",
       "Serve with fresh rotis.",
     ],
@@ -492,7 +492,7 @@ const MEALS_BASE: Meal[] = [
     ],
     recipeSteps: [
       "Crumble tofu by hand.",
-      "Saute onion, tomato, turmeric, and spices until soft.",
+      "Fry onion, tomato, turmeric, and spices until soft.",
       "Add crumbled tofu, mix well, and cook for 3-4 minutes.",
       "Serve with a roti.",
     ],
@@ -601,7 +601,7 @@ const MEALS_BASE: Meal[] = [
       { name: "Whole wheat roti", qty: "2 pieces" },
     ],
     recipeSteps: [
-      "Saute onion-tomato masala with ginger-garlic and spices until oil separates.",
+      "Fry the onion-tomato masala with ginger-garlic and spices until the oil separates out.",
       "Add sliced mushrooms, cook until they release and reabsorb their water.",
       "Simmer briefly and serve with rotis.",
     ],

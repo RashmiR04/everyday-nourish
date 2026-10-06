@@ -156,7 +156,7 @@ export default function PlanPage() {
                 <div className="text-xs mt-1 text-muted">{PERSONAL_TARGETS_SOURCE}</div>
               </details>
 
-              <div className="grid sm:grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 gap-3 items-start">
                 {MEAL_TYPES.map((type) => (
                   <MealCard key={type} meal={plan[type][i]} selectedConcerns={prefs.concerns} />
                 ))}
