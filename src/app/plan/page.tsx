@@ -25,7 +25,8 @@ export default function PlanPage() {
       return;
     }
     setPrefs(loaded);
-    setPlan(generatePlan(loaded.concerns, loaded.ingredientsOnHand));
+    const personalTargets = computePersonalTargets(loaded.sex, loaded.weightKg, loaded.activityLevel);
+    setPlan(generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal));
   }, [router]);
 
   if (!prefs || !plan) return null;
@@ -72,6 +73,12 @@ export default function PlanPage() {
                   </span>
                 </div>
                 <div className="text-xs mt-1 text-muted">{PERSONAL_TARGETS_SOURCE}</div>
+                {totals.kcal < targets.energyKcal * 0.85 && (
+                  <div className="text-xs mt-1 text-accentDeep">
+                    This day falls noticeably short of your energy target even after portion scaling — consider an
+                    extra snack or larger portions than shown.
+                  </div>
+                )}
               </div>
               <div className="grid sm:grid-cols-2 gap-3">
                 {MEAL_TYPES.map((type) => (

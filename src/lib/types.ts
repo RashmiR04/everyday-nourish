@@ -42,6 +42,7 @@ export interface Meal {
   concernTags: ConcernId[];
   concernNotes: Partial<Record<ConcernId, ConcernNote>>;
   generalNote: ConcernNote;
+  portionScale?: number;
 }
 
 export type BabyStage = "6-8m" | "8-12m";

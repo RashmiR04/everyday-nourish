@@ -14,14 +14,53 @@ function scoreMeal(meal: Meal, concerns: ConcernId[], ingredientsOnHand: string[
   return score;
 }
 
+// Portion scaling is capped at 2x the base recipe — beyond that, doubling a dish
+// stops being a realistic portion and the honest fix is more dishes per day, not
+// a bigger single serving. A plan can still fall short of a high energy target
+// (e.g. a very active, heavier build) even after this cap; that's surfaced in the
+// UI rather than silently over-scaled.
+const MAX_PORTION_SCALE = 2;
+
+function scaleQty(qty: string, factor: number): string {
+  const gramOrMl = qty.match(/^(\d+(?:\.\d+)?)(g|ml)$/);
+  if (gramOrMl) {
+    return `${Math.round(parseFloat(gramOrMl[1]) * factor)}${gramOrMl[2]}`;
+  }
+  const pieces = qty.match(/^(\d+(?:\.\d+)?)\s*(pieces?)$/);
+  if (pieces) {
+    return `${Math.max(1, Math.round(parseFloat(pieces[1]) * factor))} ${pieces[2]}`;
+  }
+  return qty;
+}
+
+function scaleMeal(meal: Meal, factor: number): Meal {
+  if (Math.abs(factor - 1) < 0.05) return meal;
+  return {
+    ...meal,
+    caloriesPerServing: Math.round(meal.caloriesPerServing * factor),
+    macros: {
+      proteinG: Math.round(meal.macros.proteinG * factor),
+      carbsG: Math.round(meal.macros.carbsG * factor),
+      fatG: Math.round(meal.macros.fatG * factor * 10) / 10,
+      fiberG: Math.round(meal.macros.fiberG * factor),
+    },
+    ingredients: meal.ingredients.map((ing) => ({ ...ing, qty: scaleQty(ing.qty, factor) })),
+    portionScale: factor,
+  };
+}
+
 /**
  * Generates a 7-day plan. For each meal slot, ranks the available dishes of
  * that type by relevance (selected concerns + ingredients on hand) and
  * cycles through them across the week. Most relevant dish appears most often;
  * with a small dataset, some repetition across the week is expected and honest
  * rather than hidden.
+ *
+ * If targetEnergyKcal is given, every dish's portion (ingredients, calories,
+ * macros) is scaled by a single week-wide factor so the plan's average day
+ * approaches that target, capped at MAX_PORTION_SCALE.
  */
-export function generatePlan(concerns: ConcernId[], ingredientsOnHand: string[]): WeekPlan {
+export function generatePlan(concerns: ConcernId[], ingredientsOnHand: string[], targetEnergyKcal?: number): WeekPlan {
   const plan = {} as WeekPlan;
   MEAL_TYPES.forEach((type) => {
     const pool = MEALS.filter((m) => m.mealType === type);
@@ -30,6 +69,21 @@ export function generatePlan(concerns: ConcernId[], ingredientsOnHand: string[])
     );
     plan[type] = DAYS.map((_, i) => ranked[i % ranked.length]);
   });
+
+  if (targetEnergyKcal) {
+    let totalKcal = 0;
+    DAYS.forEach((_, i) => {
+      MEAL_TYPES.forEach((type) => {
+        totalKcal += plan[type][i].caloriesPerServing;
+      });
+    });
+    const avgDayKcal = totalKcal / DAYS.length;
+    const factor = Math.min(MAX_PORTION_SCALE, Math.max(1, targetEnergyKcal / avgDayKcal));
+    MEAL_TYPES.forEach((type) => {
+      plan[type] = plan[type].map((m) => scaleMeal(m, factor));
+    });
+  }
+
   return plan;
 }
 

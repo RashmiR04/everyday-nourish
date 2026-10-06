@@ -9,6 +9,7 @@ import { generatePlan } from "@/lib/planner";
 import { buildGroceryList } from "@/lib/groceryList";
 import { loadPreferences } from "@/lib/storage";
 import { Preferences, GroceryItem } from "@/lib/types";
+import { computePersonalTargets } from "@/lib/nutritionTargets";
 
 export default function GroceryListPage() {
   const router = useRouter();
@@ -21,7 +22,8 @@ export default function GroceryListPage() {
       router.push("/plan/new");
       return;
     }
-    const plan = generatePlan(loaded.concerns, loaded.ingredientsOnHand);
+    const personalTargets = computePersonalTargets(loaded.sex, loaded.weightKg, loaded.activityLevel);
+    const plan = generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal);
     setPrefs(loaded);
     setGrocery(buildGroceryList(plan, loaded.household));
   }, [router]);

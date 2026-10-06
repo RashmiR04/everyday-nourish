@@ -23,6 +23,9 @@ export default function MealCard({
           <div className="font-medium text-ink">{meal.name}</div>
           <div className="text-xs mt-1 text-muted">
             {meal.servingSize} · {meal.caloriesPerServing} kcal
+            {meal.portionScale && (
+              <span> · portion scaled ~{meal.portionScale.toFixed(1)}× from the base recipe</span>
+            )}
           </div>
           {relevantTags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
