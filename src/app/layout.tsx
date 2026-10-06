@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     "weekly meal plan generator",
   ],
   robots: { index: true, follow: true },
+  verification: {
+    google: "492pfsKtEFxT42nNNCnSfu_3ajWHc9CAmz2rI-mA1cw",
+  },
   openGraph: {
     type: "website",
     url: SITE_URL,
