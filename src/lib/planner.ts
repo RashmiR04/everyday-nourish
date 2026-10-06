@@ -1,6 +1,6 @@
 import { MEALS, MEAL_TYPES, DAYS } from "./meals";
 import { BABY_MEALS, NUTRIENTS } from "./babyMeals";
-import { Meal, WeekPlan, ConcernId, BabyMeal, BabyStage, NutrientId, MealType } from "./types";
+import { Meal, WeekPlan, ConcernId, BabyMeal, BabyStage, NutrientId, MealType, Ingredient } from "./types";
 import { computeNutritionFromIngredients } from "./ingredientNutrition";
 
 // Rough share of daily energy each meal type should carry (sums to 1.0) — used
@@ -27,12 +27,45 @@ function scoreMeal(meal: Meal, concerns: ConcernId[], ingredientsOnHand: string[
   return score;
 }
 
-// Portion scaling is capped at 2x the base recipe — beyond that, doubling a dish
-// stops being a realistic portion and the honest fix is more dishes per day, not
-// a bigger single serving. A plan can still fall short of a high energy target
-// (e.g. a very active, heavier build) even after this cap; that's surfaced in the
-// UI rather than silently over-scaled.
-const MAX_PORTION_SCALE = 2;
+// Portion scaling is capped at 1.5x the base recipe — beyond that, a single
+// dish starts turning into an implausibly large plate (a 300g bowl scaled to
+// 600g+) rather than a believable serving. Days that still fall short after
+// this cap get a small separate top-up item instead (see buildTopUp below),
+// rather than stretching one dish further.
+const MAX_PORTION_SCALE = 1.5;
+
+// A small, realistic top-up added when a day's energy still falls short even
+// at MAX_PORTION_SCALE — combining a modest fruit+nuts item rather than
+// inflating one dish into an oversized portion.
+const TOP_UP_INGREDIENTS: Ingredient[] = [
+  { name: "Seasonal fruit", qty: "100g" },
+  { name: "Roasted peanuts (groundnut)", qty: "15g" },
+];
+const TOP_UP_MAX_SCALE = 2;
+
+function buildTopUp(gapKcal: number): Meal {
+  const base = computeNutritionFromIngredients(TOP_UP_INGREDIENTS);
+  const factor = Math.min(TOP_UP_MAX_SCALE, Math.max(1, gapKcal / base.caloriesPerServing));
+  const ingredients = TOP_UP_INGREDIENTS.map((ing) => ({ ...ing, qty: scaleQty(ing.qty, factor) }));
+  const nutrition = computeNutritionFromIngredients(ingredients);
+  return {
+    id: "topup",
+    name: "Fruit & Nuts Top-up",
+    mealType: "snack",
+    cookTimeMinutes: 2,
+    servingSize: scaleServingSize("1 small bowl (~115g)", factor),
+    ingredients,
+    recipeSteps: ["Serve the fruit and peanuts together alongside today's meals."],
+    concernTags: [],
+    concernNotes: {},
+    generalNote: {
+      note: "Added because today's planned meals fall short of your estimated energy need even at a realistic portion size — a small separate top-up instead of stretching one dish into an oversized serving.",
+      source: "USDA FoodData Central",
+    },
+    ...nutrition,
+    portionScale: factor > 1.05 ? factor : undefined,
+  };
+}
 
 function scaleQty(qty: string, factor: number): string {
   const gramOrMl = qty.match(/^(\d+(?:\.\d+)?)(g|ml)$/);
@@ -160,4 +193,16 @@ export function computeDailyTotals(plan: WeekPlan, dayIndex: number) {
     fiberG += meal.macros.fiberG;
   });
   return { kcal, proteinG, carbsG, fatG: Math.round(fatG * 10) / 10, fiberG };
+}
+
+/**
+ * Returns a small top-up item for a day whose planned meals (computed via
+ * computeDailyTotals) still fall below 90% of the energy target even after
+ * each dish was scaled up to MAX_PORTION_SCALE — or null if the day doesn't
+ * need one.
+ */
+export function computeDayTopUp(plan: WeekPlan, dayIndex: number, targetEnergyKcal: number): Meal | null {
+  const totals = computeDailyTotals(plan, dayIndex);
+  if (totals.kcal >= targetEnergyKcal * 0.9) return null;
+  return buildTopUp(targetEnergyKcal - totals.kcal);
 }

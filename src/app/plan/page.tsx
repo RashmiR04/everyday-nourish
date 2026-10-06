@@ -7,7 +7,7 @@ import { ShoppingBasket } from "lucide-react";
 import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import MealCard from "@/components/MealCard";
-import { generatePlan, computeDailyTotals } from "@/lib/planner";
+import { generatePlan, computeDailyTotals, computeDayTopUp } from "@/lib/planner";
 import { MEAL_TYPES, DAYS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN_DISCLAIMER } from "@/lib/meals";
 import { loadPreferences } from "@/lib/storage";
 import { Preferences, WeekPlan } from "@/lib/types";
@@ -86,8 +86,18 @@ export default function PlanPage() {
         )}
 
         {DAYS.map((day, i) => {
-          const totals = computeDailyTotals(plan, i);
-          const dayDishes = MEAL_TYPES.map((type) => plan[type][i]);
+          const baseTotals = computeDailyTotals(plan, i);
+          const topUp = computeDayTopUp(plan, i, targets.energyKcal);
+          const totals = topUp
+            ? {
+                kcal: baseTotals.kcal + topUp.caloriesPerServing,
+                proteinG: baseTotals.proteinG + topUp.macros.proteinG,
+                carbsG: baseTotals.carbsG + topUp.macros.carbsG,
+                fatG: Math.round((baseTotals.fatG + topUp.macros.fatG) * 10) / 10,
+                fiberG: baseTotals.fiberG + topUp.macros.fiberG,
+              }
+            : baseTotals;
+          const dayDishes = [...MEAL_TYPES.map((type) => plan[type][i]), ...(topUp ? [topUp] : [])];
           const { present, fruitServings } = detectFoodGroups(dayDishes);
           const energyGood = totals.kcal >= targets.energyKcal * 0.9;
           const proteinGood = totals.proteinG >= targets.proteinG;
@@ -95,7 +105,7 @@ export default function PlanPage() {
           const fruitGood = fruitServings > 0;
 
           const suggestion = !energyGood
-            ? "This day falls noticeably short of your estimated energy need even after portion scaling — consider an extra snack or larger portions than shown."
+            ? "Even with an added fruit & nuts top-up, this day falls short of your estimated energy need — consider a larger top-up or portions than shown."
             : !fruitGood
               ? "One simple improvement: add a serving of fruit today."
               : !fibreGood
@@ -161,6 +171,12 @@ export default function PlanPage() {
                   <MealCard key={type} meal={plan[type][i]} selectedConcerns={prefs.concerns} />
                 ))}
               </div>
+
+              {topUp && (
+                <div className="mt-3">
+                  <MealCard meal={topUp} selectedConcerns={prefs.concerns} />
+                </div>
+              )}
             </div>
           );
         })}
