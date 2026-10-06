@@ -74,10 +74,17 @@ export interface BabyMeal {
   safetyNotes: string[];
 }
 
+export type Sex = "male" | "female";
+export type ActivityLevel = "sedentary" | "moderate" | "active";
+
 export interface Preferences {
   concerns: ConcernId[];
   ingredientsOnHand: string[];
   household: number;
+  sex: Sex;
+  age: number;
+  weightKg: number;
+  activityLevel: ActivityLevel;
 }
 
 export type WeekPlan = Record<MealType, Meal[]>;

@@ -6,8 +6,9 @@ import { X, Sparkles } from "lucide-react";
 import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import { CONCERNS } from "@/lib/meals";
-import { ConcernId, Preferences } from "@/lib/types";
+import { ActivityLevel, ConcernId, Preferences, Sex } from "@/lib/types";
 import { savePreferences } from "@/lib/storage";
+import { ACTIVITY_LABELS } from "@/lib/nutritionTargets";
 
 function Pill({
   active,
@@ -36,6 +37,10 @@ export default function NewPlanPage() {
   const [household, setHousehold] = useState(2);
   const [ingredientInput, setIngredientInput] = useState("");
   const [ingredientsOnHand, setIngredientsOnHand] = useState<string[]>([]);
+  const [sex, setSex] = useState<Sex>("female");
+  const [age, setAge] = useState(30);
+  const [weightKg, setWeightKg] = useState(60);
+  const [activityLevel, setActivityLevel] = useState<ActivityLevel>("sedentary");
 
   const toggleConcern = (id: ConcernId) => {
     setSelectedConcerns((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
@@ -50,7 +55,15 @@ export default function NewPlanPage() {
   };
 
   const buildPlan = () => {
-    const prefs: Preferences = { concerns: selectedConcerns, ingredientsOnHand, household };
+    const prefs: Preferences = {
+      concerns: selectedConcerns,
+      ingredientsOnHand,
+      household,
+      sex,
+      age,
+      weightKg,
+      activityLevel,
+    };
     savePreferences(prefs);
     router.push("/plan");
   };
@@ -60,6 +73,64 @@ export default function NewPlanPage() {
       <Nav />
       <div className="space-y-6">
         <DisclaimerBanner />
+
+        <div>
+          <div className="text-sm font-medium mb-2 text-ink">
+            About you — used to estimate your daily nutrition targets
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label className="block text-xs mb-1 text-muted">Sex</label>
+              <div className="flex gap-2">
+                <Pill active={sex === "female"} onClick={() => setSex("female")}>
+                  Female
+                </Pill>
+                <Pill active={sex === "male"} onClick={() => setSex("male")}>
+                  Male
+                </Pill>
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs mb-1 text-muted">Age</label>
+              <input
+                type="number"
+                min={18}
+                max={100}
+                value={age}
+                onChange={(e) => setAge(Math.max(18, parseInt(e.target.value) || 18))}
+                className="w-20 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs mb-1 text-muted">Weight (kg)</label>
+              <input
+                type="number"
+                min={30}
+                max={200}
+                value={weightKg}
+                onChange={(e) => setWeightKg(Math.max(30, parseInt(e.target.value) || 30))}
+                className="w-20 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs mb-1 text-muted">Activity level</label>
+              <select
+                value={activityLevel}
+                onChange={(e) => setActivityLevel(e.target.value as ActivityLevel)}
+                className="px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
+              >
+                {(Object.keys(ACTIVITY_LABELS) as ActivityLevel[]).map((level) => (
+                  <option key={level} value={level}>
+                    {ACTIVITY_LABELS[level]}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="text-xs mt-2 text-muted">
+            Used only to estimate a general energy/protein reference for your daily summary — not stored anywhere but your browser.
+          </div>
+        </div>
 
         <div>
           <div className="text-sm font-medium mb-2 text-ink">

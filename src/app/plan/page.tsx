@@ -11,7 +11,7 @@ import { generatePlan, computeDailyTotals } from "@/lib/planner";
 import { MEAL_TYPES, DAYS } from "@/lib/meals";
 import { loadPreferences } from "@/lib/storage";
 import { Preferences, WeekPlan } from "@/lib/types";
-import { ADULT_DAILY_REFERENCE, ADULT_DAILY_REFERENCE_SOURCE } from "@/lib/nutritionTargets";
+import { computePersonalTargets, PERSONAL_TARGETS_SOURCE } from "@/lib/nutritionTargets";
 
 export default function PlanPage() {
   const router = useRouter();
@@ -29,6 +29,8 @@ export default function PlanPage() {
   }, [router]);
 
   if (!prefs || !plan) return null;
+
+  const targets = computePersonalTargets(prefs.sex, prefs.weightKg, prefs.activityLevel);
 
   return (
     <div>
@@ -54,24 +56,22 @@ export default function PlanPage() {
                 <div className="flex flex-wrap gap-x-4 gap-y-1">
                   <span>
                     Energy: {totals.kcal} kcal{" "}
-                    <span className="text-muted text-xs">
-                      (ref: {ADULT_DAILY_REFERENCE.energyKcalMin}–{ADULT_DAILY_REFERENCE.energyKcalMax})
-                    </span>
+                    <span className="text-muted text-xs">(your target: ~{targets.energyKcal})</span>
                   </span>
                   <span>
                     Protein: {totals.proteinG}g{" "}
-                    <span className="text-muted text-xs">(ref: ≥{ADULT_DAILY_REFERENCE.proteinMinG}g)</span>
+                    <span className="text-muted text-xs">(your target: ≥{targets.proteinG}g)</span>
                   </span>
                   <span>
                     Fibre: {totals.fiberG}g{" "}
-                    <span className="text-muted text-xs">(ref: ≥{ADULT_DAILY_REFERENCE.fiberMinG}g)</span>
+                    <span className="text-muted text-xs">(ref: ≥{targets.fiberMinG}g)</span>
                   </span>
                   <span>
                     Fat: {totals.fatG}g{" "}
-                    <span className="text-muted text-xs">(ref: ≤{ADULT_DAILY_REFERENCE.fatMaxG}g)</span>
+                    <span className="text-muted text-xs">(ref: ≤{targets.fatMaxG}g)</span>
                   </span>
                 </div>
-                <div className="text-xs mt-1 text-muted">{ADULT_DAILY_REFERENCE_SOURCE}</div>
+                <div className="text-xs mt-1 text-muted">{PERSONAL_TARGETS_SOURCE}</div>
               </div>
               <div className="grid sm:grid-cols-2 gap-3">
                 {MEAL_TYPES.map((type) => (
