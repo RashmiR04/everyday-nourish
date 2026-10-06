@@ -1,6 +1,18 @@
 import { MEALS, MEAL_TYPES, DAYS } from "./meals";
 import { BABY_MEALS, NUTRIENTS } from "./babyMeals";
-import { Meal, WeekPlan, ConcernId, BabyMeal, BabyStage, NutrientId } from "./types";
+import { Meal, WeekPlan, ConcernId, BabyMeal, BabyStage, NutrientId, MealType } from "./types";
+
+// Rough share of daily energy each meal type should carry (sums to 1.0) — used
+// to scale each meal type toward its own share of the day's target, instead of
+// one flat multiplier applied to whatever each dish's base calories happened to
+// be (which produced wildly uneven meals, e.g. an 870kcal lunch next to a
+// 200kcal snack on the same day).
+const MEAL_TYPE_ENERGY_SHARE: Record<MealType, number> = {
+  breakfast: 0.225,
+  lunch: 0.325,
+  snack: 0.125,
+  dinner: 0.325,
+};
 
 function scoreMeal(meal: Meal, concerns: ConcernId[], ingredientsOnHand: string[]): number {
   let score = 0;
@@ -56,9 +68,10 @@ function scaleMeal(meal: Meal, factor: number): Meal {
  * with a small dataset, some repetition across the week is expected and honest
  * rather than hidden.
  *
- * If targetEnergyKcal is given, every dish's portion (ingredients, calories,
- * macros) is scaled by a single week-wide factor so the plan's average day
- * approaches that target, capped at MAX_PORTION_SCALE.
+ * If targetEnergyKcal is given, each meal type is scaled by its own factor
+ * toward its share of the day's target (MEAL_TYPE_ENERGY_SHARE) rather than
+ * one global factor applied to every dish regardless of meal type — capped at
+ * MAX_PORTION_SCALE per meal type.
  */
 export function generatePlan(concerns: ConcernId[], ingredientsOnHand: string[], targetEnergyKcal?: number): WeekPlan {
   const plan = {} as WeekPlan;
@@ -71,15 +84,10 @@ export function generatePlan(concerns: ConcernId[], ingredientsOnHand: string[],
   });
 
   if (targetEnergyKcal) {
-    let totalKcal = 0;
-    DAYS.forEach((_, i) => {
-      MEAL_TYPES.forEach((type) => {
-        totalKcal += plan[type][i].caloriesPerServing;
-      });
-    });
-    const avgDayKcal = totalKcal / DAYS.length;
-    const factor = Math.min(MAX_PORTION_SCALE, Math.max(1, targetEnergyKcal / avgDayKcal));
     MEAL_TYPES.forEach((type) => {
+      const avgKcal = plan[type].reduce((sum, m) => sum + m.caloriesPerServing, 0) / plan[type].length;
+      const mealTarget = targetEnergyKcal * MEAL_TYPE_ENERGY_SHARE[type];
+      const factor = Math.min(MAX_PORTION_SCALE, Math.max(1, mealTarget / avgKcal));
       plan[type] = plan[type].map((m) => scaleMeal(m, factor));
     });
   }
