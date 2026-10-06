@@ -7,12 +7,14 @@ import { ShoppingBasket } from "lucide-react";
 import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import MealCard from "@/components/MealCard";
+import FeedbackWidget from "@/components/FeedbackWidget";
 import { generatePlan, computeDailyTotals, computeDayTopUp } from "@/lib/planner";
 import { MEAL_TYPES, DAYS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN_DISCLAIMER } from "@/lib/meals";
-import { loadPreferences } from "@/lib/storage";
+import { loadPreferences, isReturningVisitor } from "@/lib/storage";
 import { Preferences, WeekPlan } from "@/lib/types";
 import { computePersonalTargets, PERSONAL_TARGETS_SOURCE } from "@/lib/nutritionTargets";
 import { detectFoodGroups } from "@/lib/foodGroups";
+import { track } from "@vercel/analytics";
 
 function Dot({ ok }: { ok: boolean }) {
   return (
@@ -45,6 +47,7 @@ export default function PlanPage() {
     setPrefs(loaded);
     const personalTargets = computePersonalTargets(loaded.sex, loaded.age, loaded.weightKg, loaded.activityLevel);
     setPlan(generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal));
+    track("plan_viewed", { returningVisitor: isReturningVisitor() });
   }, [router]);
 
   if (!prefs || !plan) return null;
@@ -180,6 +183,8 @@ export default function PlanPage() {
             </div>
           );
         })}
+
+        <FeedbackWidget context="plan" />
       </div>
     </div>
   );

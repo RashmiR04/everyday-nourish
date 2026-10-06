@@ -9,6 +9,7 @@ import { CONCERNS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN
 import { ActivityLevel, ConcernId, Preferences, Sex } from "@/lib/types";
 import { savePreferences } from "@/lib/storage";
 import { ACTIVITY_LABELS } from "@/lib/nutritionTargets";
+import { track } from "@vercel/analytics";
 
 function Pill({
   active,
@@ -65,6 +66,11 @@ export default function NewPlanPage() {
       activityLevel,
     };
     savePreferences(prefs);
+    track("plan_generated", {
+      concernCount: selectedConcerns.length,
+      hasIngredientsOnHand: ingredientsOnHand.length > 0,
+      household,
+    });
     router.push("/plan");
   };
 

@@ -4,11 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import { Sparkles } from "lucide-react";
 import Nav from "@/components/Nav";
 import BabyMealCard from "@/components/BabyMealCard";
+import FeedbackWidget from "@/components/FeedbackWidget";
 import { generateBabyPlan, computeNutrientCoverage } from "@/lib/planner";
 import { BABY_STAGES, NUTRIENTS, NUTRIENT_LABELS } from "@/lib/babyMeals";
 import { DAYS } from "@/lib/meals";
 import { BabyStage } from "@/lib/types";
 import { saveBabyStage, loadBabyStage } from "@/lib/storage";
+import { track } from "@vercel/analytics";
 
 type Step = "stage" | "plan" | "nutrients";
 
@@ -75,7 +77,10 @@ export default function BabyPlanPage() {
             </ul>
           </div>
           <button
-            onClick={() => setStep("plan")}
+            onClick={() => {
+              setStep("plan");
+              track("baby_plan_viewed", { stage });
+            }}
             className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent"
           >
             <Sparkles size={16} /> View this stage&apos;s plan
@@ -92,6 +97,7 @@ export default function BabyPlanPage() {
           {DAYS.map((day, i) => (
             <BabyMealCard key={day} meal={plan[i]} dayLabel={day} />
           ))}
+          <FeedbackWidget context="baby" />
         </div>
       )}
 
