@@ -25,13 +25,13 @@ export default function PlanPage() {
       return;
     }
     setPrefs(loaded);
-    const personalTargets = computePersonalTargets(loaded.sex, loaded.weightKg, loaded.activityLevel);
+    const personalTargets = computePersonalTargets(loaded.sex, loaded.age, loaded.weightKg, loaded.activityLevel);
     setPlan(generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal));
   }, [router]);
 
   if (!prefs || !plan) return null;
 
-  const targets = computePersonalTargets(prefs.sex, prefs.weightKg, prefs.activityLevel);
+  const targets = computePersonalTargets(prefs.sex, prefs.age, prefs.weightKg, prefs.activityLevel);
 
   return (
     <div>

@@ -22,7 +22,7 @@ export default function GroceryListPage() {
       router.push("/plan/new");
       return;
     }
-    const personalTargets = computePersonalTargets(loaded.sex, loaded.weightKg, loaded.activityLevel);
+    const personalTargets = computePersonalTargets(loaded.sex, loaded.age, loaded.weightKg, loaded.activityLevel);
     const plan = generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal);
     setPrefs(loaded);
     setGrocery(buildGroceryList(plan, loaded.household));

@@ -1,13 +1,27 @@
 import { ActivityLevel, Sex } from "./types";
 
-// ICMR-NIN Recommended Dietary Allowances (RDA) for Indians, 2020 — reference daily
-// energy requirement for the adult (18-59y) reference-weight Indian, by sex and
-// activity level. This is a population reference figure, not an individual
-// measurement (ICMR-NIN's own tables are further broken down by exact age band;
-// this app uses the general adult figure across 18-59y for simplicity).
-const ENERGY_KCAL: Record<Sex, Record<ActivityLevel, number>> = {
-  male: { sedentary: 2110, moderate: 2710, active: 3470 },
-  female: { sedentary: 1660, moderate: 2130, active: 2720 },
+// Schofield equations (weight-only form, kcal/day) from the FAO/WHO/UNU 1985
+// expert consultation report, retained in the FAO/WHO 2001 report (Table 5.2).
+// Estimates resting/basal metabolic rate from body weight, age band, and sex —
+// this is what actually makes the energy target respond to the weight you enter,
+// rather than a flat population figure by sex and activity level alone.
+function basalMetabolicRate(sex: Sex, age: number, weightKg: number): number {
+  if (sex === "male") {
+    if (age < 30) return 15.057 * weightKg + 692.2;
+    if (age < 60) return 11.472 * weightKg + 873.1;
+    return 11.711 * weightKg + 587.7;
+  }
+  if (age < 30) return 14.818 * weightKg + 486.6;
+  if (age < 60) return 8.126 * weightKg + 845.6;
+  return 9.082 * weightKg + 658.5;
+}
+
+// Physical activity level (PAL) multipliers, standard values commonly used
+// alongside Schofield/Harris-Benedict-style BMR estimates.
+const ACTIVITY_MULTIPLIER: Record<ActivityLevel, number> = {
+  sedentary: 1.2,
+  moderate: 1.55,
+  active: 1.725,
 };
 
 export const ACTIVITY_LABELS: Record<ActivityLevel, string> = {
@@ -24,8 +38,14 @@ export interface PersonalTargets {
   carbsG: number;
 }
 
-export function computePersonalTargets(sex: Sex, weightKg: number, activityLevel: ActivityLevel): PersonalTargets {
-  const energyKcal = ENERGY_KCAL[sex][activityLevel];
+export function computePersonalTargets(
+  sex: Sex,
+  age: number,
+  weightKg: number,
+  activityLevel: ActivityLevel
+): PersonalTargets {
+  const bmr = basalMetabolicRate(sex, age, weightKg);
+  const energyKcal = Math.round(bmr * ACTIVITY_MULTIPLIER[activityLevel]);
   // ICMR-NIN 2020: ~0.83g protein per kg body weight/day for a healthy adult on a
   // mixed diet (higher, ~1g/kg, is suggested for largely cereal-based diets with
   // lower-quality protein — this app uses the general 0.83g/kg figure).
@@ -39,4 +59,4 @@ export function computePersonalTargets(sex: Sex, weightKg: number, activityLevel
 }
 
 export const PERSONAL_TARGETS_SOURCE =
-  "Estimated from ICMR-NIN Recommended Dietary Allowances (RDA) for Indians, 2020 (energy by sex & activity level; protein ~0.83g/kg body weight) and the ICMR-NIN 2024 Dietary Guidelines' 2,000-kcal model macro split. A general estimate based on what you entered, not a medical prescription — actual needs can vary further by age, health status, and individual metabolism.";
+  "Energy estimated from the Schofield BMR equations (FAO/WHO/UNU, weight + age + sex) × an activity multiplier; protein from ICMR-NIN 2020 RDA (~0.83g/kg body weight); fat/carb split from the ICMR-NIN 2024 Dietary Guidelines' 2,000-kcal model. A general estimate based on what you entered, not a medical prescription — actual needs can vary further by health status and individual metabolism.";
