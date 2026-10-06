@@ -89,7 +89,7 @@ export default function PlanPage() {
           const totals = computeDailyTotals(plan, i);
           const dayDishes = MEAL_TYPES.map((type) => plan[type][i]);
           const { present, fruitServings } = detectFoodGroups(dayDishes);
-          const energyGood = totals.kcal >= targets.energyKcal * 0.85;
+          const energyGood = totals.kcal >= targets.energyKcal * 0.9;
           const proteinGood = totals.proteinG >= targets.proteinG;
           const fibreGood = totals.fiberG >= targets.fiberMinG;
           const fruitGood = fruitServings > 0;
@@ -139,7 +139,7 @@ export default function PlanPage() {
                   </span>
                   <span>
                     Protein: {totals.proteinG}g{" "}
-                    <span className="text-muted text-xs">(target: ≥{targets.proteinG}g)</span>
+                    <span className="text-muted text-xs">(your target: ~{targets.proteinG}g, based on your weight)</span>
                   </span>
                   <span>Carbs: {totals.carbsG}g</span>
                   <span>Fat: {totals.fatG}g</span>
