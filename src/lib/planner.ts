@@ -46,6 +46,15 @@ function scaleQty(qty: string, factor: number): string {
   return qty;
 }
 
+// The "(~160g)"-style weight inside servingSize is the only part of that
+// descriptive text scaling can update mechanically — item counts ("2 chillas")
+// are left as-is, same honest tradeoff as piece-based ingredients not scaling
+// smoothly. Without this, a scaled dish could show a stale "~40g" next to a
+// tripled calorie count, which looks implausible even though the math is right.
+function scaleServingSize(servingSize: string, factor: number): string {
+  return servingSize.replace(/~(\d+(?:\.\d+)?)g/, (_, grams) => `~${Math.round(parseFloat(grams) * factor)}g`);
+}
+
 function scaleMeal(meal: Meal, factor: number): Meal {
   if (Math.abs(factor - 1) < 0.05) return meal;
   // Scale the ingredient quantities, then recompute nutrition from those
@@ -55,6 +64,7 @@ function scaleMeal(meal: Meal, factor: number): Meal {
   return {
     ...meal,
     ingredients,
+    servingSize: scaleServingSize(meal.servingSize, factor),
     ...computeNutritionFromIngredients(ingredients),
     portionScale: factor,
   };
