@@ -1,6 +1,7 @@
 import { MEALS, MEAL_TYPES, DAYS } from "./meals";
 import { BABY_MEALS, NUTRIENTS } from "./babyMeals";
 import { Meal, WeekPlan, ConcernId, BabyMeal, BabyStage, NutrientId, MealType } from "./types";
+import { computeNutritionFromIngredients } from "./ingredientNutrition";
 
 // Rough share of daily energy each meal type should carry (sums to 1.0) — used
 // to scale each meal type toward its own share of the day's target, instead of
@@ -47,16 +48,14 @@ function scaleQty(qty: string, factor: number): string {
 
 function scaleMeal(meal: Meal, factor: number): Meal {
   if (Math.abs(factor - 1) < 0.05) return meal;
+  // Scale the ingredient quantities, then recompute nutrition from those
+  // scaled quantities (rather than separately scaling the stored macros),
+  // so the displayed ingredients and nutrition can never drift apart.
+  const ingredients = meal.ingredients.map((ing) => ({ ...ing, qty: scaleQty(ing.qty, factor) }));
   return {
     ...meal,
-    caloriesPerServing: Math.round(meal.caloriesPerServing * factor),
-    macros: {
-      proteinG: Math.round(meal.macros.proteinG * factor),
-      carbsG: Math.round(meal.macros.carbsG * factor),
-      fatG: Math.round(meal.macros.fatG * factor * 10) / 10,
-      fiberG: Math.round(meal.macros.fiberG * factor),
-    },
-    ingredients: meal.ingredients.map((ing) => ({ ...ing, qty: scaleQty(ing.qty, factor) })),
+    ingredients,
+    ...computeNutritionFromIngredients(ingredients),
     portionScale: factor,
   };
 }

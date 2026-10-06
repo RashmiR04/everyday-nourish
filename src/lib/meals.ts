@@ -1,18 +1,19 @@
 import { Meal } from "./types";
+import { computeNutritionFromIngredients } from "./ingredientNutrition";
 
-// Calories: calculated from IFCT 2017 / USDA FoodData Central verified ingredient
-// values (see project nutrition-dataset-tracker spreadsheet for full workings).
 // Concern notes: each cites a real, checkable source — see source field per note.
 // This is general information, not medical advice.
 //
-// Ingredient reference-value spot-check (besan, toor dal, paneer, rolled oats,
-// almonds) against published IFCT/USDA figures: besan, paneer, and rolled-oats
-// protein were found meaningfully off (besan ~15% high on kcal, paneer ~20% low
-// on kcal, oats protein ~28% high) and corrected in m1/m2/m7 below. Toor dal and
-// almonds matched closely and were left as-is. Remaining ingredients use the
-// original estimates and haven't been individually re-verified.
+// caloriesPerServing/macros below are placeholders overwritten at module load
+// (see the MEALS export at the bottom of this file) — the real source of truth
+// is each dish's ingredient list computed against ingredientNutrition.ts, not
+// these hand-entered numbers. They're left in place only because many dishes'
+// placeholder values happen to already be close to the computed ones from an
+// earlier verification pass (besan, paneer, and rolled-oats were corrected
+// there against published IFCT/USDA figures) — removing them entirely is a
+// reasonable future cleanup, but isn't required for correctness.
 
-export const MEALS: Meal[] = [
+const MEALS_BASE: Meal[] = [
   {
     id: "m1", name: "Vegetable Besan Chilla", mealType: "breakfast", cookTimeMinutes: 15,
     servingSize: "2 chillas (~160g)", caloriesPerServing: 256,
@@ -621,6 +622,14 @@ export const MEALS: Meal[] = [
     },
   },
 ];
+
+// The real nutrition pipeline: ingredient list -> ingredientNutrition.ts ->
+// computed calories/macros, overwriting whatever placeholder numbers each
+// dish above was authored with.
+export const MEALS: Meal[] = MEALS_BASE.map((m) => ({
+  ...m,
+  ...computeNutritionFromIngredients(m.ingredients),
+}));
 
 export const CONCERNS: { id: Meal["concernTags"][number]; label: string }[] = [
   { id: "triglycerides", label: "High triglycerides" },
