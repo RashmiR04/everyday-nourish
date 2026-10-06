@@ -628,6 +628,56 @@ export const CONCERNS: { id: Meal["concernTags"][number]; label: string }[] = [
   { id: "weightLoss", label: "Weight management" },
 ];
 
+// Pattern-level guidance per health concern, shown when a concern is selected.
+// Deliberately framed around the overall dietary pattern rather than any single
+// "this food fixes X" claim — no ingredient in this app is positioned as a cure.
+export const CONCERN_PATTERN_GUIDANCE: Record<string, string[]> = {
+  triglycerides: [
+    "Emphasizes soluble fibre from whole grains and legumes",
+    "Limits added sugar and refined carbohydrates",
+    "Includes plant omega-3 sources, though fish-derived omega-3 has stronger evidence for triglycerides specifically",
+  ],
+  hdl: [
+    "Favors unsaturated fats from nuts and seeds over saturated fats",
+    "Includes regular legumes and whole grains",
+  ],
+  ldl: [
+    "Replaces saturated-fat-heavy dishes with nuts, legumes, and whole grains",
+    "Increases soluble fibre intake across the week",
+  ],
+  diabetes: [
+    "Favors lower-glycemic whole grains and legumes over refined grains",
+    "Pairs protein and fibre at each meal to moderate blood sugar response",
+  ],
+  bp: [
+    "Uses minimal added salt in preparation",
+    "Includes potassium-rich vegetables and whole grains, similar to the DASH eating pattern",
+  ],
+  iron: [
+    "Includes iron-rich plant foods (legumes, leafy greens) through the week",
+    "Pairs iron sources with vitamin C-rich foods in the same meal to aid absorption",
+  ],
+  pcos: [
+    "Favors higher-protein, lower-refined-carb meals, part of general insulin-friendly eating patterns",
+    "No single ingredient is treated as a fix — exercise, sleep, and other factors matter too",
+  ],
+  thyroid: [
+    "Keeps meals balanced and whole-food based rather than built around one 'thyroid food'",
+    "Doesn't adjust for iodine intake or medication-timing interactions — discuss specifics with your doctor",
+  ],
+  digestion: [
+    "Includes fibre from whole grains, legumes, and vegetables",
+    "Includes probiotic foods like curd regularly",
+  ],
+  weightLoss: [
+    "Favors higher protein and fibre for satiety at moderate calories",
+    "Favors whole foods over calorie-dense processed snacks",
+  ],
+};
+
+export const CONCERN_PATTERN_DISCLAIMER =
+  "Dietary patterns matter more than any single food. For abnormal lab results or a diagnosed condition, discuss personalized changes with your doctor or dietitian — this is general information, not medical advice.";
+
 export const CONCERN_TAG_LABELS: Record<string, string> = {
   triglycerides: "Managing high triglycerides",
   hdl: "Improving low HDL",

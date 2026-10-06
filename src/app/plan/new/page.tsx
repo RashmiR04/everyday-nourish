@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { X, Sparkles } from "lucide-react";
 import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
-import { CONCERNS } from "@/lib/meals";
+import { CONCERNS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN_DISCLAIMER } from "@/lib/meals";
 import { ActivityLevel, ConcernId, Preferences, Sex } from "@/lib/types";
 import { savePreferences } from "@/lib/storage";
 import { ACTIVITY_LABELS } from "@/lib/nutritionTargets";
@@ -143,6 +143,25 @@ export default function NewPlanPage() {
               </Pill>
             ))}
           </div>
+
+          {selectedConcerns.length > 0 && (
+            <div className="rounded-xl border border-line bg-card px-4 py-3 mt-3 text-sm text-ink">
+              <div className="font-medium mb-2">How this plan is adapted</div>
+              <div className="space-y-2">
+                {selectedConcerns.map((c) => (
+                  <div key={c}>
+                    <div className="text-xs font-medium text-muted mb-0.5">{CONCERN_TAG_LABELS[c]}</div>
+                    <ul className="list-disc list-inside space-y-0.5">
+                      {CONCERN_PATTERN_GUIDANCE[c].map((line, i) => (
+                        <li key={i}>{line}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+              <div className="text-xs mt-2 text-muted">{CONCERN_PATTERN_DISCLAIMER}</div>
+            </div>
+          )}
         </div>
 
         <div>

@@ -8,7 +8,7 @@ import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import MealCard from "@/components/MealCard";
 import { generatePlan, computeDailyTotals } from "@/lib/planner";
-import { MEAL_TYPES, DAYS } from "@/lib/meals";
+import { MEAL_TYPES, DAYS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN_DISCLAIMER } from "@/lib/meals";
 import { loadPreferences } from "@/lib/storage";
 import { Preferences, WeekPlan } from "@/lib/types";
 import { computePersonalTargets, PERSONAL_TARGETS_SOURCE } from "@/lib/nutritionTargets";
@@ -47,6 +47,25 @@ export default function PlanPage() {
             <ShoppingBasket size={16} /> Grocery list
           </Link>
         </div>
+
+        {prefs.concerns.length > 0 && (
+          <div className="rounded-xl border border-line bg-card px-4 py-3 text-sm text-ink">
+            <div className="font-medium mb-2">How this plan is adapted</div>
+            <div className="space-y-2">
+              {prefs.concerns.map((c) => (
+                <div key={c}>
+                  <div className="text-xs font-medium text-muted mb-0.5">{CONCERN_TAG_LABELS[c]}</div>
+                  <ul className="list-disc list-inside space-y-0.5">
+                    {CONCERN_PATTERN_GUIDANCE[c].map((line, i) => (
+                      <li key={i}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <div className="text-xs mt-2 text-muted">{CONCERN_PATTERN_DISCLAIMER}</div>
+          </div>
+        )}
 
         {DAYS.map((day, i) => {
           const totals = computeDailyTotals(plan, i);
