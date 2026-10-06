@@ -18,7 +18,7 @@ export default function BabyPlanPage() {
 
   useEffect(() => {
     const saved = loadBabyStage();
-    if (saved === "6-8m" || saved === "8-12m") setStage(saved);
+    if (saved === "6-8m" || saved === "9-11m" || saved === "12-23m") setStage(saved);
   }, []);
 
   const plan = useMemo(() => generateBabyPlan(stage), [stage]);

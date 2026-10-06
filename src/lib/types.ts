@@ -45,7 +45,7 @@ export interface Meal {
   portionScale?: number;
 }
 
-export type BabyStage = "6-8m" | "8-12m";
+export type BabyStage = "6-8m" | "9-11m" | "12-23m";
 
 export type NutrientId =
   | "iron"

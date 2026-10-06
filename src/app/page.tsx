@@ -20,7 +20,7 @@ export default function HomePage() {
           <li>Have an ingredient on hand? It nudges that into your week</li>
           <li>Every suggested dish explains why, with a real source you can check</li>
           <li>An auto-generated grocery list, scaled to your household size</li>
-          <li>A separate mode for your baby&apos;s complementary feeding (6-12 months)</li>
+          <li>A separate mode for your baby&apos;s complementary feeding (6-23 months)</li>
         </ul>
       </div>
 

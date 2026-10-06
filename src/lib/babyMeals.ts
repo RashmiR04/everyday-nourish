@@ -17,9 +17,12 @@ export const NUTRIENT_LABELS: Record<NutrientId, string> = {
   calcium: "Calcium",
 };
 
+// Age bands follow WHO's 2023 complementary feeding guideline structure
+// (6-8m / 9-11m / 12-23m) rather than a single generic "8-12 months" bucket.
 export const BABY_STAGES: { id: BabyMeal["stage"]; label: string }[] = [
-  { id: "6-8m", label: "6-8 months (starting solids)" },
-  { id: "8-12m", label: "8-12 months (textures & finger foods)" },
+  { id: "6-8m", label: "6-8 months (starting solids, smooth purees)" },
+  { id: "9-11m", label: "9-11 months (soft mash, minced textures)" },
+  { id: "12-23m", label: "12-23 months (finger foods, modified family meals)" },
 ];
 
 const WHO_SRC = "WHO Guideline for complementary feeding of infants and young children 6\u201323 months of age (2023)";
@@ -123,7 +126,7 @@ export const BABY_MEALS: BabyMeal[] = [
     ],
   },
   {
-    id: "b6", name: "Moong Dal Khichdi (Soft Mash)", stage: "8-12m", texture: "Soft mash", caloriesPerServing: 147,
+    id: "b6", name: "Moong Dal Khichdi (Soft Mash)", stage: "9-11m", texture: "Soft mash", caloriesPerServing: 147,
     nutrientsCovered: ["protein", "iron", "zinc"],
     nutrientNotes: {
       protein: { note: "Combining rice and dal provides a more complete amino acid profile than either alone.", source: INDIA_SRC },
@@ -144,7 +147,7 @@ export const BABY_MEALS: BabyMeal[] = [
     safetyNotes: ["No added salt", "Texture can be slightly thicker/lumpier than the 6-8 month stage"],
   },
   {
-    id: "b7", name: "Paneer & Mashed Vegetable", stage: "8-12m", texture: "Soft finger food", caloriesPerServing: 95,
+    id: "b7", name: "Paneer & Mashed Vegetable", stage: "12-23m", texture: "Soft finger food", caloriesPerServing: 95,
     nutrientsCovered: ["protein", "calcium"],
     nutrientNotes: {
       protein: { note: "Paneer is a commonly used early dairy-protein source once a baby is tolerating dairy.", source: INDIA_SRC },
@@ -166,7 +169,7 @@ export const BABY_MEALS: BabyMeal[] = [
     ],
   },
   {
-    id: "b8", name: "Curd with Mashed Fruit", stage: "8-12m", texture: "Soft mash", caloriesPerServing: 48,
+    id: "b8", name: "Curd with Mashed Fruit", stage: "12-23m", texture: "Soft mash", caloriesPerServing: 48,
     nutrientsCovered: ["calcium", "vitaminC"],
     nutrientNotes: {
       calcium: { note: "Curd is a commonly used dairy source of calcium once dairy has been introduced without reaction.", source: INDIA_SRC },
@@ -181,7 +184,7 @@ export const BABY_MEALS: BabyMeal[] = [
     safetyNotes: ["No added sugar", "Use plain, unsweetened curd"],
   },
   {
-    id: "b9", name: "Spinach & Moong Dal Mash", stage: "8-12m", texture: "Soft mash", caloriesPerServing: 88,
+    id: "b9", name: "Spinach & Moong Dal Mash", stage: "9-11m", texture: "Soft mash", caloriesPerServing: 88,
     nutrientsCovered: ["iron", "vitaminA"],
     nutrientNotes: {
       iron: { note: "Spinach and dal together are commonly combined for a plant-based iron boost at this stage.", source: WHO_SRC },
@@ -200,7 +203,7 @@ export const BABY_MEALS: BabyMeal[] = [
     safetyNotes: ["No added salt", "Ensure spinach is fully cooked and soft"],
   },
   {
-    id: "b10", name: "Soft Idli Pieces with Mild Sambar", stage: "8-12m", texture: "Soft finger food", caloriesPerServing: null,
+    id: "b10", name: "Soft Idli Pieces with Mild Sambar", stage: "12-23m", texture: "Soft finger food", caloriesPerServing: null,
     nutrientsCovered: ["protein", "iron"],
     nutrientNotes: {
       protein: { note: "Fermented rice-and-dal batters like idli provide a soft, easy-to-handle source of plant protein for finger-food stage.", source: INDIA_SRC },
@@ -220,5 +223,48 @@ export const BABY_MEALS: BabyMeal[] = [
       "No added salt in the sambar for this age",
       "Cut into soft pieces sized for baby-led feeding, no hard edges",
     ],
+  },
+  {
+    id: "b11", name: "Dalia & Moong Dal Mash with Pumpkin", stage: "9-11m", texture: "Soft mash", caloriesPerServing: 126,
+    nutrientsCovered: ["zinc", "vitaminA"],
+    nutrientNotes: {
+      zinc: { note: "Whole grains combined with lentils are a commonly cited plant source of zinc at this stage.", source: WHO_SRC },
+      vitaminA: { note: "Pumpkin contributes vitamin A as more vegetable variety is introduced.", source: INDIA_SRC },
+    },
+    ingredients: [
+      { name: "Broken wheat (dalia)", qty: "2 tbsp" },
+      { name: "Moong dal", qty: "1 tbsp" },
+      { name: "Pumpkin", qty: "2 tbsp, mashed" },
+      { name: "Ghee", qty: "1/4 tsp" },
+    ],
+    recipeSteps: [
+      "Cook dalia and moong dal together with pumpkin until very soft.",
+      "Mash to a soft, slightly textured consistency.",
+      "Stir in ghee before serving.",
+    ],
+    allergenFlags: [],
+    safetyNotes: ["No added salt", "Texture can include small soft lumps at this stage"],
+  },
+  {
+    id: "b12", name: "Soft Vegetable Paratha with Dal", stage: "12-23m", texture: "Soft finger food", caloriesPerServing: 140,
+    nutrientsCovered: ["fats", "protein"],
+    nutrientNotes: {
+      fats: { note: "A small amount of ghee in cooking adds calorie density and helps absorb fat-soluble vitamins, appropriate as toddlers increasingly share modified family food.", source: WHO_SRC },
+      protein: { note: "Dal served alongside adds plant protein to the meal.", source: INDIA_SRC },
+    },
+    ingredients: [
+      { name: "Whole wheat flour", qty: "3 tbsp" },
+      { name: "Mixed grated vegetables", qty: "2 tbsp" },
+      { name: "Ghee", qty: "1/2 tsp, for cooking" },
+      { name: "Mild dal (for serving)", qty: "2 tbsp" },
+    ],
+    recipeSteps: [
+      "Knead whole wheat flour with grated vegetables and a little water into a soft dough.",
+      "Roll into a small, soft paratha and cook lightly with ghee on both sides until fully cooked but soft.",
+      "Cut into small finger-food-sized strips.",
+      "Serve with mild, mashed dal.",
+    ],
+    allergenFlags: [],
+    safetyNotes: ["Cut into soft finger-food strips, no hard crust", "Keep ghee quantity moderate"],
   },
 ];

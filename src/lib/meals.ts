@@ -4,12 +4,19 @@ import { Meal } from "./types";
 // values (see project nutrition-dataset-tracker spreadsheet for full workings).
 // Concern notes: each cites a real, checkable source — see source field per note.
 // This is general information, not medical advice.
+//
+// Ingredient reference-value spot-check (besan, toor dal, paneer, rolled oats,
+// almonds) against published IFCT/USDA figures: besan, paneer, and rolled-oats
+// protein were found meaningfully off (besan ~15% high on kcal, paneer ~20% low
+// on kcal, oats protein ~28% high) and corrected in m1/m2/m7 below. Toor dal and
+// almonds matched closely and were left as-is. Remaining ingredients use the
+// original estimates and haven't been individually re-verified.
 
 export const MEALS: Meal[] = [
   {
     id: "m1", name: "Vegetable Besan Chilla", mealType: "breakfast", cookTimeMinutes: 15,
-    servingSize: "2 chillas (~160g)", caloriesPerServing: 304,
-    macros: { proteinG: 16, carbsG: 44, fatG: 7, fiberG: 8 },
+    servingSize: "2 chillas (~160g)", caloriesPerServing: 256,
+    macros: { proteinG: 15, carbsG: 36, fatG: 5.3, fiberG: 11 },
     ingredients: [
       { name: "Besan (gram flour)", qty: "60g" },
       { name: "Capsicum", qty: "30g" },
@@ -41,8 +48,8 @@ export const MEALS: Meal[] = [
   },
   {
     id: "m2", name: "Oats & Flaxseed Upma", mealType: "breakfast", cookTimeMinutes: 15,
-    servingSize: "1 bowl (~220g)", caloriesPerServing: 274,
-    macros: { proteinG: 12, carbsG: 43, fatG: 7.8, fiberG: 11 },
+    servingSize: "1 bowl (~220g)", caloriesPerServing: 280,
+    macros: { proteinG: 10, carbsG: 44, fatG: 7.6, fiberG: 10 },
     ingredients: [
       { name: "Rolled oats", qty: "50g" },
       { name: "Flaxseed (ground)", qty: "10g" },
@@ -184,8 +191,8 @@ export const MEALS: Meal[] = [
   },
   {
     id: "m7", name: "Palak Paneer with Roti", mealType: "dinner", cookTimeMinutes: 30,
-    servingSize: "1 bowl + 2 rotis (~320g)", caloriesPerServing: 454,
-    macros: { proteinG: 25, carbsG: 36, fatG: 17.4, fiberG: 7 },
+    servingSize: "1 bowl + 2 rotis (~320g)", caloriesPerServing: 459,
+    macros: { proteinG: 27, carbsG: 38, fatG: 21.4, fiberG: 7 },
     ingredients: [
       { name: "Spinach", qty: "150g" },
       { name: "Paneer", qty: "80g" },

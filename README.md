@@ -1,10 +1,12 @@
 # Everyday Nourish
 
 A practical Indian meal planner — balanced by default, with optional health-concern
-layering, ingredient-on-hand nudging, a grocery list, and a separate baby nutrition
-mode (6-12 months). Every "why it's suggested" note cites a real, checkable source
-(IFCT 2017 / USDA for nutrition data; ICMR-NIN 2024, WHO 2023, NIH ODS, FDA, and AHA
-for the health claims).
+layering (framed around dietary patterns, not single-food cures), ingredient-on-hand
+nudging, individualized daily energy/protein targets with portion scaling, a grocery
+list, and a separate baby complementary-feeding mode (6-23 months, WHO-aligned age
+bands). Every "why it's suggested" note cites a real, checkable source (IFCT 2017 /
+USDA for nutrition data; ICMR-NIN 2020/2024, WHO 2023, NIH ODS, FDA, and AHA for the
+health claims).
 
 This is general information, not medical advice.
 
@@ -44,33 +46,44 @@ src/
     Nav.tsx
   lib/
     types.ts                  shared TypeScript types
-    meals.ts                  real adult dataset (15 dishes, verified calories + sources)
-    babyMeals.ts               real baby dataset (10 dishes, 6-8m / 8-12m)
-    planner.ts                 pure plan-generation logic (unit-testable)
+    meals.ts                  real adult dataset (22 dishes, verified calories + macros + sources)
+    babyMeals.ts               real baby dataset (12 dishes, 6-8m / 9-11m / 12-23m)
+    planner.ts                 pure plan-generation logic incl. portion scaling (unit-testable)
     groceryList.ts              pure grocery aggregation logic (unit-testable)
+    nutritionTargets.ts          individualized energy/protein targets (ICMR-NIN 2020 RDA)
     storage.ts                  localStorage helpers
 ```
 
 ## What's genuinely done vs. still open
 
 **Done:** all adult dish calories verified against IFCT 2017 / USDA; all adult
-"why it's suggested" notes backed by a real source; two overclaims caught and
-corrected during sourcing (chia/flaxseed + triglycerides; fenugreek + PCOS). Baby
-dishes similarly sourced against the real WHO 2023 complementary feeding
-guideline and India's National IYCF Guidelines.
+"why it's suggested" notes backed by a real source, every dish (not just
+concern-matched ones) now shows a general sourced note; two overclaims caught and
+corrected during sourcing (chia/flaxseed + triglycerides; fenugreek + PCOS).
+Per-dish macro breakdown (protein/carbs/fat/fibre) added. Daily nutrition targets
+are now individualized (sex, age, weight, activity level → ICMR-NIN 2020 energy
+and protein reference) instead of one hard-coded range, and portions scale
+(capped at 2x) toward that target rather than just being compared against it.
+Health-concern selection shows pattern-level guidance ("how this plan is
+adapted") plus a doctor/dietitian disclaimer, instead of only per-dish claims.
+A second validation pass against published IFCT/USDA figures caught and fixed
+real errors in besan, paneer, and rolled-oats protein. Baby dishes sourced
+against the real WHO 2023 complementary feeding guideline and India's National
+IYCF Guidelines, now split into WHO's three age bands (6-8m / 9-11m / 12-23m)
+instead of one generic "8-12m" bucket.
 
 **Still open:**
-- "Soft Idli with Mild Sambar" (baby, 8-12m) has no verified calorie figure yet —
+- "Soft Idli with Mild Sambar" (baby, 12-23m) has no verified calorie figure yet —
   it's a composite cooked dish, better calculated from its own sub-ingredients
   (rice, dal, vegetables) than looked up as one number. The UI honestly shows
   "kcal pending verification" rather than a guess.
-- Only 15 adult + 10 baby dishes exist, so expect some repetition across a
+- The IFCT/USDA re-validation pass covered the highest-impact ingredients
+  (besan, toor dal, paneer, rolled oats, almonds) but not all ~40 ingredients in
+  the dataset — the rest are still first-pass estimates.
+- Only 22 adult + 12 baby dishes exist, so expect some repetition across a
   7-day week — expanding the dataset (see `nutrition-dataset-tracker.xlsx` from
   the planning phase for the ingredient-verification workflow) is the natural
   next step once there's real usage to justify it.
-- A final spot-check of the ~37 verified ingredient values against the actual
-  IFCT 2017 PDF (not just USDA/cross-referenced sources) is worth doing before
-  this goes in front of real users.
 - Non-veg dishes, accounts, AI-assisted plan generation: all deliberately out of
   scope for this version.
 
