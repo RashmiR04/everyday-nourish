@@ -68,10 +68,12 @@ function scaleMeal(meal: Meal, factor: number): Meal {
  * with a small dataset, some repetition across the week is expected and honest
  * rather than hidden.
  *
- * If targetEnergyKcal is given, each meal type is scaled by its own factor
- * toward its share of the day's target (MEAL_TYPE_ENERGY_SHARE) rather than
- * one global factor applied to every dish regardless of meal type — capped at
- * MAX_PORTION_SCALE per meal type.
+ * If targetEnergyKcal is given, every dish is individually scaled toward its
+ * meal type's share of THAT day's target (MEAL_TYPE_ENERGY_SHARE), capped at
+ * MAX_PORTION_SCALE. Scaling per-dish rather than using one week-average
+ * factor per meal type keeps every day close to the target, instead of
+ * days swinging by 600+ kcal depending on which dishes happened to land
+ * together that day.
  */
 export function generatePlan(concerns: ConcernId[], ingredientsOnHand: string[], targetEnergyKcal?: number): WeekPlan {
   const plan = {} as WeekPlan;
@@ -85,10 +87,11 @@ export function generatePlan(concerns: ConcernId[], ingredientsOnHand: string[],
 
   if (targetEnergyKcal) {
     MEAL_TYPES.forEach((type) => {
-      const avgKcal = plan[type].reduce((sum, m) => sum + m.caloriesPerServing, 0) / plan[type].length;
       const mealTarget = targetEnergyKcal * MEAL_TYPE_ENERGY_SHARE[type];
-      const factor = Math.min(MAX_PORTION_SCALE, Math.max(1, mealTarget / avgKcal));
-      plan[type] = plan[type].map((m) => scaleMeal(m, factor));
+      plan[type] = plan[type].map((m) => {
+        const factor = Math.min(MAX_PORTION_SCALE, Math.max(1, mealTarget / m.caloriesPerServing));
+        return scaleMeal(m, factor);
+      });
     });
   }
 
