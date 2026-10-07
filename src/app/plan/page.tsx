@@ -154,6 +154,9 @@ export default function PlanPage() {
           const fibreGood = totals.fiberG >= targets.fiberMinG;
           const fruitGood = fruitServings > 0;
 
+          // null means nothing to flag — the balance pills above already show
+          // that visually, so we skip repeating an identical "all good"
+          // sentence under every single day of an already well-scaled plan.
           const suggestion = !energyGood
             ? "Even with an added fruit & nuts top-up, this day falls short of your estimated energy need — consider a larger top-up or portions than shown."
             : !fruitGood
@@ -168,7 +171,7 @@ export default function PlanPage() {
                       ? "One simple improvement: add a pulse-based dish (dal, rajma, chana)."
                       : !present.nutsSeeds
                         ? "One simple improvement: add a small portion of nuts or seeds."
-                        : "This day covers the key food groups and nutrition targets well.";
+                        : null;
 
           return (
             <div key={day}>
@@ -192,7 +195,7 @@ export default function PlanPage() {
                   <BalanceItem ok={present.wholeGrains} label="Whole grains" />
                   <BalanceItem ok={present.dairy} label="Dairy" />
                 </div>
-                <div className="text-sm mt-2">{suggestion}</div>
+                {suggestion && <div className="text-sm mt-2">{suggestion}</div>}
               </div>
 
               <details className="rounded-xl border border-line bg-card px-4 py-3 mb-3 text-sm text-ink">
