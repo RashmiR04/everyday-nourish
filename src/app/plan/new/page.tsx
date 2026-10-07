@@ -142,7 +142,7 @@ export default function NewPlanPage() {
                 className="w-20 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
               />
             </div>
-            <div className="min-w-0">
+            <div className="col-span-2 sm:col-span-4 min-w-0">
               <label className="block text-xs mb-1 text-muted">Activity level</label>
               <select
                 value={activityLevel}
