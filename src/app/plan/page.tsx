@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ShoppingBasket } from "lucide-react";
+import { ShoppingBasket, ChefHat } from "lucide-react";
 import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import MealCard from "@/components/MealCard";
@@ -172,7 +172,12 @@ export default function PlanPage() {
 
           return (
             <div key={day}>
-              <div className="font-display text-ink text-base font-medium mb-2">{day}</div>
+              <Link
+                href={`/plan/today?day=${i}`}
+                className="font-display text-ink text-base font-medium mb-2 flex items-center gap-1.5 hover:text-accentDeep"
+              >
+                <ChefHat size={16} className="text-accentDeep" /> {day}
+              </Link>
 
               <div className="rounded-xl border border-line bg-card px-4 py-3 mb-3 text-sm text-ink">
                 <div className="font-medium mb-2">Today&apos;s balance</div>

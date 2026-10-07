@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Baby, ChefHat, ShoppingBasket, Share2 } from "lucide-react";
 import Nav from "@/components/Nav";
@@ -22,7 +22,16 @@ function todayIndex(): number {
 }
 
 export default function TodayKitchenPage() {
+  return (
+    <Suspense fallback={null}>
+      <KitchenView />
+    </Suspense>
+  );
+}
+
+function KitchenView() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [prefs, setPrefs] = useState<Preferences | null>(null);
   const [plan, setPlan] = useState<WeekPlan | null>(null);
 
@@ -53,7 +62,10 @@ export default function TodayKitchenPage() {
 
   if (!prefs || !plan) return null;
 
-  const dayIndex = todayIndex();
+  const dayParam = Number(searchParams.get("day"));
+  const hasValidDayParam = !Number.isNaN(dayParam) && dayParam >= 0 && dayParam <= 6;
+  const dayIndex = hasValidDayParam ? dayParam : todayIndex();
+  const isViewingToday = dayIndex === todayIndex();
   const dayMeals = MEAL_TYPES.map((type) => plan[type][dayIndex]);
   const babyStageLabel =
     prefs.hasBaby && prefs.babyStage
@@ -70,8 +82,13 @@ export default function TodayKitchenPage() {
 
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-xs uppercase tracking-wide text-muted">{DAYS[dayIndex]}</div>
-            <h2 className="font-display text-ink text-xl font-semibold">Today&apos;s Kitchen</h2>
+            <div className="text-xs uppercase tracking-wide text-muted">
+              {DAYS[dayIndex]}
+              {isViewingToday ? " · Today" : ""}
+            </div>
+            <h2 className="font-display text-ink text-xl font-semibold">
+              {isViewingToday ? "Today's Kitchen" : `${DAYS[dayIndex]}'s Kitchen`}
+            </h2>
           </div>
           <Link href="/plan" className="text-sm text-accentDeep underline">
             See full week
@@ -94,7 +111,7 @@ export default function TodayKitchenPage() {
             const meal = plan[type][dayIndex];
             const whatsappText = encodeURIComponent(
               [
-                `Today's Kitchen – ${MEAL_TYPE_LABELS[type]}`,
+                `${DAYS[dayIndex]}'s Kitchen – ${MEAL_TYPE_LABELS[type]}`,
                 "",
                 meal.name,
                 "",
@@ -167,7 +184,7 @@ export default function TodayKitchenPage() {
 
         <div className="rounded-xl border border-line bg-card px-4 py-3">
           <div className="font-medium mb-2 flex items-center gap-1.5 text-ink">
-            <ShoppingBasket size={16} className="text-accentDeep" /> For today
+            <ShoppingBasket size={16} className="text-accentDeep" /> For {isViewingToday ? "today" : DAYS[dayIndex]}
           </div>
           {needToBuy.length > 0 && (
             <div className="mb-3">

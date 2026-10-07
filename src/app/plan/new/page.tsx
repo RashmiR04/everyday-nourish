@@ -93,7 +93,7 @@ export default function NewPlanPage() {
       household,
       hasBaby,
     });
-    router.push("/plan/today");
+    router.push("/plan");
   };
 
   return (
