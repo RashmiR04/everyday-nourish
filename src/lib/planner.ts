@@ -168,6 +168,13 @@ export function generateBabyPlan(stage: BabyStage): BabyMeal[] {
   const pool = BABY_MEALS.filter((m) => m.stage === stage);
   const coverage: Record<string, number> = {};
   NUTRIENTS.forEach((n) => (coverage[n] = 0));
+  // Tracks how many times each dish has been used this week. Without this,
+  // a couple of dishes with complementary nutrient coverage (e.g. one hitting
+  // 3 nutrients, another covering the 2 nutrients everyone else neglects) keep
+  // out-scoring every other dish every single day — the greedy pick collapses
+  // to 2 dishes alternating all week no matter how many dishes are in the pool.
+  const usedCount: Record<string, number> = {};
+  pool.forEach((m) => (usedCount[m.id] = 0));
   const plan: BabyMeal[] = [];
   let lastId: string | null = null;
 
@@ -180,6 +187,9 @@ export function generateBabyPlan(stage: BabyStage): BabyMeal[] {
       meal.nutrientsCovered.forEach((n: NutrientId) => {
         score += 7 - coverage[n];
       });
+      // Outweighs the nutrient-coverage score so an already-used dish only gets
+      // picked again once every other pool dish has had a turn.
+      score -= usedCount[meal.id] * 10;
       if (score > bestScore) {
         bestScore = score;
         best = meal;
@@ -188,6 +198,7 @@ export function generateBabyPlan(stage: BabyStage): BabyMeal[] {
     if (!best) break;
     plan.push(best);
     (best as BabyMeal).nutrientsCovered.forEach((n: NutrientId) => (coverage[n] += 1));
+    usedCount[(best as BabyMeal).id] += 1;
     lastId = (best as BabyMeal).id;
   }
   return plan;
@@ -228,10 +239,12 @@ export function computeDayTopUp(plan: WeekPlan, dayIndex: number, targetEnergyKc
 /**
  * All dishes of a given meal type a person could swap to, respecting the same
  * avoid-ingredients filter (and the same empty-pool fallback) as generatePlan.
+ * customRecipes (from "My recipes") are merged into the pool so a person's own
+ * ingredient-built dishes show up as swap options alongside the built-ins.
  */
-export function getMealOptions(type: MealType, avoidIngredients: string[] = []): Meal[] {
+export function getMealOptions(type: MealType, avoidIngredients: string[] = [], customRecipes: Meal[] = []): Meal[] {
   const avoidLower = avoidIngredients.map((a) => a.toLowerCase()).filter(Boolean);
-  const fullPool = MEALS.filter((m) => m.mealType === type);
+  const fullPool = [...MEALS, ...customRecipes].filter((m) => m.mealType === type);
   const filteredPool = fullPool.filter(
     (m) => !m.ingredients.some((ing) => avoidLower.some((a) => ing.name.toLowerCase().includes(a)))
   );
@@ -249,9 +262,10 @@ export function swapDish(
   type: MealType,
   dayIndex: number,
   newDishId: string,
-  targetEnergyKcal?: number
+  targetEnergyKcal?: number,
+  customRecipes: Meal[] = []
 ): WeekPlan {
-  const base = MEALS.find((m) => m.id === newDishId && m.mealType === type);
+  const base = [...MEALS, ...customRecipes].find((m) => m.id === newDishId && m.mealType === type);
   if (!base) return plan;
   const newMeal = targetEnergyKcal
     ? scaleMeal(base, Math.min(MAX_PORTION_SCALE, Math.max(1, (targetEnergyKcal * MEAL_TYPE_ENERGY_SHARE[type]) / base.caloriesPerServing)))

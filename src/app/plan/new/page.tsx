@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { X, Sparkles } from "lucide-react";
 import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
@@ -254,12 +255,17 @@ export default function NewPlanPage() {
           />
         </div>
 
-        <button
-          onClick={buildPlan}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent"
-        >
-          <Sparkles size={16} /> Build my plan
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={buildPlan}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent"
+          >
+            <Sparkles size={16} /> Build my plan
+          </button>
+          <Link href="/my-recipes" className="text-sm text-accentDeep underline">
+            Don&apos;t see a dish you make at home? Add your own recipe
+          </Link>
+        </div>
       </div>
     </div>
   );

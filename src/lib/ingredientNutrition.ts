@@ -69,6 +69,16 @@ export const INGREDIENT_NUTRITION: Record<string, NutrientPer100> = {
   "Button mushroom": { kcal: 22, proteinG: 3.1, carbsG: 3.3, fatG: 0.3, fiberG: 1 },
 };
 
+// Names a "My recipes" ingredient picker can offer, since every dish's
+// nutrition must come from this table (no free-text ingredients).
+export const INGREDIENT_NAMES: string[] = Object.keys(INGREDIENT_NUTRITION).sort();
+
+// Entries stated per-piece rather than per-100g/ml — a custom-recipe picker
+// must default these to a "piece" unit instead of grams, since a per-piece
+// value scaled as if it were per-100g would wildly overstate calories (the
+// exact bug this dataset hit before, see comment above on "Almonds (soaked)").
+export const PER_PIECE_INGREDIENTS = ["Whole wheat roti", "Almonds (soaked)"];
+
 function parseQty(qty: string): { amount: number; perPiece: boolean } | null {
   const gramOrMl = qty.match(/^(\d+(?:\.\d+)?)(?:g|ml)$/);
   if (gramOrMl) return { amount: parseFloat(gramOrMl[1]), perPiece: false };

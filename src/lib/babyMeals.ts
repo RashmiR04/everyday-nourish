@@ -267,4 +267,158 @@ export const BABY_MEALS: BabyMeal[] = [
     allergenFlags: [],
     safetyNotes: ["Cut into soft finger-food strips, no hard crust", "Keep ghee quantity moderate"],
   },
+  {
+    id: "b13", name: "Mashed Chana (Chickpea) & Carrot Puree", stage: "6-8m", texture: "Smooth puree", caloriesPerServing: 70,
+    nutrientsCovered: ["zinc", "vitaminA"],
+    nutrientNotes: {
+      zinc: { note: "Well-cooked, well-mashed chickpeas are a commonly used plant source of zinc as early legumes are introduced.", source: WHO_SRC },
+      vitaminA: { note: "Carrot adds vitamin A to this combination.", source: INDIA_SRC },
+    },
+    ingredients: [
+      { name: "Boiled chickpeas (chana)", qty: "2 tbsp, well-mashed" },
+      { name: "Carrot", qty: "1 small" },
+    ],
+    recipeSteps: [
+      "Boil chickpeas until very soft, then peel off any loose skins and mash thoroughly.",
+      "Steam and mash the carrot separately.",
+      "Mix both to a smooth, lump-free puree, adding a little water if needed.",
+    ],
+    allergenFlags: [],
+    safetyNotes: [
+      "No added salt",
+      "Mash thoroughly and remove loose skins to keep the texture fully smooth and reduce choking risk",
+      "Introduce chickpeas on their own first in a small amount, before combining, to watch for any reaction",
+    ],
+  },
+  {
+    id: "b14", name: "Steamed Pear Puree", stage: "6-8m", texture: "Smooth puree", caloriesPerServing: 57,
+    nutrientsCovered: ["vitaminC"],
+    nutrientNotes: {
+      vitaminC: { note: "Pear is a gentle, easily digested early fruit that contributes vitamin C and fibre.", source: WHO_SRC },
+    },
+    ingredients: [{ name: "Pear", qty: "1 small" }],
+    recipeSteps: [
+      "Peel, core, and chop the pear.",
+      "Steam until soft.",
+      "Mash or blend to a smooth, lump-free puree.",
+      "Cool before serving.",
+    ],
+    allergenFlags: [],
+    safetyNotes: ["No added sugar", "Ensure fully smooth texture at this stage"],
+  },
+  {
+    id: "b15", name: "Vegetable Dalia Khichdi", stage: "9-11m", texture: "Soft mash", caloriesPerServing: 130,
+    nutrientsCovered: ["protein", "iron"],
+    nutrientNotes: {
+      protein: { note: "Combining broken wheat with moong dal provides a more complete amino acid profile than either alone.", source: INDIA_SRC },
+      iron: { note: "Dal contributes non-heme iron to this meal.", source: WHO_SRC },
+    },
+    ingredients: [
+      { name: "Broken wheat (dalia)", qty: "2 tbsp" },
+      { name: "Moong dal", qty: "1 tbsp" },
+      { name: "Mixed grated vegetables (carrot, beans)", qty: "2 tbsp" },
+      { name: "Ghee", qty: "1/4 tsp" },
+    ],
+    recipeSteps: [
+      "Cook dalia and moong dal together with the grated vegetables until very soft.",
+      "Mash to a soft, slightly textured consistency.",
+      "Stir in ghee before serving.",
+    ],
+    allergenFlags: [],
+    safetyNotes: ["No added salt", "Texture can include small soft lumps at this stage"],
+  },
+  {
+    id: "b16", name: "Mashed Rajma (Kidney Beans) with Rice", stage: "9-11m", texture: "Soft mash", caloriesPerServing: 145,
+    nutrientsCovered: ["protein", "iron"],
+    nutrientNotes: {
+      protein: { note: "Well-cooked, well-mashed kidney beans combined with rice add plant protein and variety to the dal-rice pattern.", source: INDIA_SRC },
+      iron: { note: "Legumes like rajma are a source of non-heme iron as a baby's diet diversifies.", source: WHO_SRC },
+    },
+    ingredients: [
+      { name: "Rice", qty: "2 tbsp" },
+      { name: "Rajma (kidney beans), well-cooked", qty: "1 tbsp, mashed" },
+      { name: "Ghee", qty: "1/4 tsp" },
+    ],
+    recipeSteps: [
+      "Cook rice until very soft.",
+      "Cook kidney beans until completely soft, then mash thoroughly, removing any firm skins.",
+      "Mix the rice and mashed beans together, stir in ghee before serving.",
+    ],
+    allergenFlags: [],
+    safetyNotes: [
+      "No added salt",
+      "Rajma must be cooked completely soft and mashed well to reduce choking risk",
+      "Introduce rajma on its own in a small amount first to check for tolerance",
+    ],
+  },
+  {
+    id: "b17", name: "Curd Rice with Grated Carrot", stage: "9-11m", texture: "Soft mash", caloriesPerServing: 95,
+    nutrientsCovered: ["calcium", "vitaminA"],
+    nutrientNotes: {
+      calcium: { note: "Curd introduces dairy calcium as part of a growing variety of foods at this stage.", source: INDIA_SRC },
+      vitaminA: { note: "Grated carrot adds vitamin A to this simple combination.", source: WHO_SRC },
+    },
+    ingredients: [
+      { name: "Cooked rice", qty: "3 tbsp" },
+      { name: "Plain curd", qty: "2 tbsp" },
+      { name: "Carrot", qty: "1 tbsp, finely grated" },
+    ],
+    recipeSteps: [
+      "Mash the cooked rice slightly.",
+      "Mix in plain curd and finely grated carrot.",
+      "Serve at room temperature.",
+    ],
+    allergenFlags: ["dairy"],
+    safetyNotes: ["Introduce dairy gradually and watch for reaction if this is a new food", "No added salt or sugar"],
+  },
+  {
+    id: "b18", name: "Vegetable Pulao with Curd", stage: "12-23m", texture: "Soft finger food", caloriesPerServing: 185,
+    nutrientsCovered: ["vitaminA", "calcium"],
+    nutrientNotes: {
+      vitaminA: { note: "Mixed vegetables in the pulao contribute vitamin A as toddlers share more modified family meals.", source: INDIA_SRC },
+      calcium: { note: "A side of curd adds dairy calcium to the meal.", source: WHO_SRC },
+    },
+    ingredients: [
+      { name: "Rice", qty: "3 tbsp" },
+      { name: "Mixed vegetables (carrot, peas, beans)", qty: "2 tbsp, finely chopped" },
+      { name: "Ghee", qty: "1/2 tsp" },
+      { name: "Plain curd (for serving)", qty: "2 tbsp" },
+    ],
+    recipeSteps: [
+      "Cook rice with the finely chopped vegetables and ghee until soft.",
+      "Lightly mash larger pieces so the texture is soft and easy to manage.",
+      "Serve with a side of plain curd.",
+    ],
+    allergenFlags: ["dairy"],
+    safetyNotes: [
+      "Keep vegetable pieces small and soft to reduce choking risk",
+      "Keep seasoning mild and salt minimal for this age, per your pediatrician's guidance",
+    ],
+  },
+  {
+    id: "b19", name: "Besan Chilla Strips with Curd", stage: "12-23m", texture: "Soft finger food", caloriesPerServing: 165,
+    nutrientsCovered: ["protein", "zinc"],
+    nutrientNotes: {
+      protein: { note: "Besan (gram flour) is a plant-protein-rich base for an easy finger-food pancake.", source: INDIA_SRC },
+      zinc: { note: "Chickpea flour contributes zinc alongside protein at this stage.", source: WHO_SRC },
+    },
+    ingredients: [
+      { name: "Besan (gram flour)", qty: "3 tbsp" },
+      { name: "Water", qty: "~60ml" },
+      { name: "Finely grated vegetables (optional)", qty: "1 tbsp" },
+      { name: "Ghee", qty: "1/2 tsp, for cooking" },
+      { name: "Plain curd (for serving)", qty: "2 tbsp" },
+    ],
+    recipeSteps: [
+      "Mix besan with water and grated vegetables into a smooth, lump-free batter.",
+      "Cook a thin pancake lightly with ghee on a pan until fully cooked on both sides.",
+      "Cut into soft strips once cooled slightly.",
+      "Serve with plain curd.",
+    ],
+    allergenFlags: ["dairy"],
+    safetyNotes: [
+      "Ensure the chilla is cooked through, soft, and not crisp/hard at the edges",
+      "Cut into finger-food-sized strips",
+    ],
+  },
 ];

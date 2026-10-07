@@ -10,8 +10,8 @@ import MealCard from "@/components/MealCard";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import { generatePlan, computeDailyTotals, computeDayTopUp, getMealOptions, swapDish } from "@/lib/planner";
 import { MEAL_TYPES, DAYS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN_DISCLAIMER } from "@/lib/meals";
-import { loadPreferences, loadPlan, savePlan, isReturningVisitor } from "@/lib/storage";
-import { MealType, Preferences, WeekPlan } from "@/lib/types";
+import { loadPreferences, loadPlan, savePlan, isReturningVisitor, loadCustomRecipes } from "@/lib/storage";
+import { Meal, MealType, Preferences, WeekPlan } from "@/lib/types";
 import { computePersonalTargets, PERSONAL_TARGETS_SOURCE } from "@/lib/nutritionTargets";
 import { detectFoodGroups } from "@/lib/foodGroups";
 import { track } from "@vercel/analytics";
@@ -37,6 +37,7 @@ export default function PlanPage() {
   const router = useRouter();
   const [prefs, setPrefs] = useState<Preferences | null>(null);
   const [plan, setPlan] = useState<WeekPlan | null>(null);
+  const [customRecipes, setCustomRecipes] = useState<Meal[]>([]);
 
   useEffect(() => {
     const loaded = loadPreferences();
@@ -45,6 +46,7 @@ export default function PlanPage() {
       return;
     }
     setPrefs(loaded);
+    setCustomRecipes(loadCustomRecipes());
     // Prefer the saved plan (preserves any swaps) over regenerating from
     // scratch. Only falls back to generating fresh if none was saved yet —
     // normally /plan/new always saves one before sending the user here.
@@ -67,7 +69,7 @@ export default function PlanPage() {
   const handleSwap = (type: MealType, dayIndex: number, newDishId: string) => {
     setPlan((prev) => {
       if (!prev) return prev;
-      const updated = swapDish(prev, type, dayIndex, newDishId, targets.energyKcal);
+      const updated = swapDish(prev, type, dayIndex, newDishId, targets.energyKcal, customRecipes);
       savePlan(updated);
       return updated;
     });
@@ -83,9 +85,14 @@ export default function PlanPage() {
           <Link href="/plan/new" className="text-sm text-accentDeep underline">
             Change preferences / regenerate
           </Link>
-          <Link href="/plan/grocery-list" className="flex items-center gap-1.5 text-sm text-accentDeep">
-            <ShoppingBasket size={16} /> Grocery list
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/my-recipes" className="text-sm text-accentDeep underline">
+              My recipes
+            </Link>
+            <Link href="/plan/grocery-list" className="flex items-center gap-1.5 text-sm text-accentDeep">
+              <ShoppingBasket size={16} /> Grocery list
+            </Link>
+          </div>
         </div>
 
         {prefs.concerns.length > 0 && (
@@ -194,7 +201,7 @@ export default function PlanPage() {
                     key={type}
                     meal={plan[type][i]}
                     selectedConcerns={prefs.concerns}
-                    alternatives={getMealOptions(type, prefs.avoidIngredients)}
+                    alternatives={getMealOptions(type, prefs.avoidIngredients, customRecipes)}
                     onSwap={(newId) => handleSwap(type, i, newId)}
                   />
                 ))}

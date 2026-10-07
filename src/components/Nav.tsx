@@ -7,6 +7,7 @@ import { Leaf } from "lucide-react";
 export default function Nav() {
   const pathname = usePathname();
   const isBaby = pathname.startsWith("/baby");
+  const isRecipes = pathname.startsWith("/my-recipes");
 
   return (
     <div className="mb-6">
@@ -19,7 +20,7 @@ export default function Nav() {
         <Link
           href="/plan/new"
           className={`px-4 py-2 rounded-lg text-sm font-medium border ${
-            !isBaby ? "bg-accent border-accent text-white" : "border-line text-ink"
+            !isBaby && !isRecipes ? "bg-accent border-accent text-white" : "border-line text-ink"
           }`}
         >
           My plan
@@ -31,6 +32,14 @@ export default function Nav() {
           }`}
         >
           Baby&apos;s plan
+        </Link>
+        <Link
+          href="/my-recipes"
+          className={`px-4 py-2 rounded-lg text-sm font-medium border ${
+            isRecipes ? "bg-accent border-accent text-white" : "border-line text-ink"
+          }`}
+        >
+          My recipes
         </Link>
       </div>
     </div>

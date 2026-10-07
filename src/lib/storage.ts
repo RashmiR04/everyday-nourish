@@ -1,8 +1,9 @@
-import { Preferences, WeekPlan } from "./types";
+import { Meal, Preferences, WeekPlan } from "./types";
 
 const PREFS_KEY = "everyday-nourish:preferences";
 const PLAN_KEY = "everyday-nourish:plan";
 const BABY_STAGE_KEY = "everyday-nourish:babyStage";
+const CUSTOM_RECIPES_KEY = "everyday-nourish:customRecipes";
 
 export function savePreferences(prefs: Preferences): void {
   if (typeof window === "undefined") return;
@@ -38,6 +39,25 @@ export function loadPlan(): WeekPlan | null {
     return JSON.parse(raw) as WeekPlan;
   } catch {
     return null;
+  }
+}
+
+// Custom recipes are a standing library the person builds up (not tied to one
+// week's plan), so they're stored separately from PLAN_KEY and survive
+// regenerating or swapping dishes in a plan.
+export function saveCustomRecipes(recipes: Meal[]): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(CUSTOM_RECIPES_KEY, JSON.stringify(recipes));
+}
+
+export function loadCustomRecipes(): Meal[] {
+  if (typeof window === "undefined") return [];
+  const raw = window.localStorage.getItem(CUSTOM_RECIPES_KEY);
+  if (!raw) return [];
+  try {
+    return JSON.parse(raw) as Meal[];
+  } catch {
+    return [];
   }
 }
 
