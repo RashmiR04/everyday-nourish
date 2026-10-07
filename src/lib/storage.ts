@@ -1,6 +1,7 @@
-import { Preferences } from "./types";
+import { Preferences, WeekPlan } from "./types";
 
 const PREFS_KEY = "everyday-nourish:preferences";
+const PLAN_KEY = "everyday-nourish:plan";
 const BABY_STAGE_KEY = "everyday-nourish:babyStage";
 
 export function savePreferences(prefs: Preferences): void {
@@ -14,6 +15,27 @@ export function loadPreferences(): Preferences | null {
   if (!raw) return null;
   try {
     return JSON.parse(raw) as Preferences;
+  } catch {
+    return null;
+  }
+}
+
+// Persists the actual resolved plan (including any dish swaps), not just the
+// preferences it was generated from — so reloading /plan restores swaps
+// instead of silently regenerating a fresh, un-swapped plan. Overwritten
+// whenever /plan/new generates a new plan, which is the intended way to
+// discard swaps and start over.
+export function savePlan(plan: WeekPlan): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(PLAN_KEY, JSON.stringify(plan));
+}
+
+export function loadPlan(): WeekPlan | null {
+  if (typeof window === "undefined") return null;
+  const raw = window.localStorage.getItem(PLAN_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as WeekPlan;
   } catch {
     return null;
   }

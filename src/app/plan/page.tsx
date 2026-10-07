@@ -10,7 +10,7 @@ import MealCard from "@/components/MealCard";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import { generatePlan, computeDailyTotals, computeDayTopUp, getMealOptions, swapDish } from "@/lib/planner";
 import { MEAL_TYPES, DAYS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN_DISCLAIMER } from "@/lib/meals";
-import { loadPreferences, isReturningVisitor } from "@/lib/storage";
+import { loadPreferences, loadPlan, savePlan, isReturningVisitor } from "@/lib/storage";
 import { MealType, Preferences, WeekPlan } from "@/lib/types";
 import { computePersonalTargets, PERSONAL_TARGETS_SOURCE } from "@/lib/nutritionTargets";
 import { detectFoodGroups } from "@/lib/foodGroups";
@@ -45,8 +45,18 @@ export default function PlanPage() {
       return;
     }
     setPrefs(loaded);
-    const personalTargets = computePersonalTargets(loaded.sex, loaded.age, loaded.weightKg, loaded.activityLevel);
-    setPlan(generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal, loaded.avoidIngredients));
+    // Prefer the saved plan (preserves any swaps) over regenerating from
+    // scratch. Only falls back to generating fresh if none was saved yet —
+    // normally /plan/new always saves one before sending the user here.
+    const saved = loadPlan();
+    if (saved) {
+      setPlan(saved);
+    } else {
+      const personalTargets = computePersonalTargets(loaded.sex, loaded.age, loaded.weightKg, loaded.activityLevel);
+      const fresh = generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal, loaded.avoidIngredients);
+      savePlan(fresh);
+      setPlan(fresh);
+    }
     track("plan_viewed", { returningVisitor: isReturningVisitor() });
   }, [router]);
 
@@ -55,7 +65,12 @@ export default function PlanPage() {
   const targets = computePersonalTargets(prefs.sex, prefs.age, prefs.weightKg, prefs.activityLevel);
 
   const handleSwap = (type: MealType, dayIndex: number, newDishId: string) => {
-    setPlan((prev) => (prev ? swapDish(prev, type, dayIndex, newDishId, targets.energyKcal) : prev));
+    setPlan((prev) => {
+      if (!prev) return prev;
+      const updated = swapDish(prev, type, dayIndex, newDishId, targets.energyKcal);
+      savePlan(updated);
+      return updated;
+    });
   };
 
   return (

@@ -7,7 +7,7 @@ import { ShoppingBasket, Printer } from "lucide-react";
 import Nav from "@/components/Nav";
 import { generatePlan } from "@/lib/planner";
 import { buildGroceryList } from "@/lib/groceryList";
-import { loadPreferences } from "@/lib/storage";
+import { loadPreferences, loadPlan, savePlan } from "@/lib/storage";
 import { Preferences, GroceryItem } from "@/lib/types";
 import { computePersonalTargets } from "@/lib/nutritionTargets";
 import { track } from "@vercel/analytics";
@@ -23,8 +23,12 @@ export default function GroceryListPage() {
       router.push("/plan/new");
       return;
     }
-    const personalTargets = computePersonalTargets(loaded.sex, loaded.age, loaded.weightKg, loaded.activityLevel);
-    const plan = generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal, loaded.avoidIngredients);
+    let plan = loadPlan();
+    if (!plan) {
+      const personalTargets = computePersonalTargets(loaded.sex, loaded.age, loaded.weightKg, loaded.activityLevel);
+      plan = generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal, loaded.avoidIngredients);
+      savePlan(plan);
+    }
     setPrefs(loaded);
     setGrocery(buildGroceryList(plan, loaded.household));
     track("grocery_list_viewed");
