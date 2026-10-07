@@ -8,7 +8,7 @@ import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import { CONCERNS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN_DISCLAIMER } from "@/lib/meals";
 import { BABY_STAGES } from "@/lib/babyMeals";
-import { ActivityLevel, BabyStage, ConcernId, Preferences, Sex } from "@/lib/types";
+import { ActivityLevel, BabyStage, ConcernId, CookingSetup, Preferences, Sex } from "@/lib/types";
 import { savePreferences, savePlan, clearDayNotes } from "@/lib/storage";
 import { ACTIVITY_LABELS, computePersonalTargets } from "@/lib/nutritionTargets";
 import { generatePlan } from "@/lib/planner";
@@ -49,6 +49,7 @@ export default function NewPlanPage() {
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>("sedentary");
   const [hasBaby, setHasBaby] = useState(false);
   const [babyStage, setBabyStage] = useState<BabyStage>("6-8m");
+  const [cookingSetup, setCookingSetup] = useState<CookingSetup>("self");
 
   const toggleConcern = (id: ConcernId) => {
     setSelectedConcerns((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
@@ -82,6 +83,7 @@ export default function NewPlanPage() {
       activityLevel,
       hasBaby,
       babyStage: hasBaby ? babyStage : undefined,
+      cookingSetup,
     };
     savePreferences(prefs);
     const targets = computePersonalTargets(prefs.sex, prefs.age, prefs.weightKg, prefs.activityLevel);
@@ -288,6 +290,27 @@ export default function NewPlanPage() {
               </div>
             </div>
           )}
+        </div>
+
+        <div>
+          <div className="text-sm font-medium mb-2 text-ink">Who&apos;s cooking, day to day?</div>
+          <div className="flex flex-wrap gap-2">
+            <Pill active={cookingSetup === "self"} onClick={() => setCookingSetup("self")}>
+              I cook myself
+            </Pill>
+            <Pill active={cookingSetup === "family"} onClick={() => setCookingSetup("family")}>
+              Someone at home cooks
+            </Pill>
+            <Pill active={cookingSetup === "helper"} onClick={() => setCookingSetup("helper")}>
+              I have a cook/helper
+            </Pill>
+            <Pill active={cookingSetup === "varies"} onClick={() => setCookingSetup("varies")}>
+              It varies
+            </Pill>
+          </div>
+          <div className="text-xs mt-2 text-muted">
+            Used only to decide whether to show an option to share instructions with whoever&apos;s cooking.
+          </div>
         </div>
 
         <div className="flex items-center gap-4">

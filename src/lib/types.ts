@@ -77,6 +77,7 @@ export interface BabyMeal {
 
 export type Sex = "male" | "female";
 export type ActivityLevel = "sedentary" | "moderate" | "active";
+export type CookingSetup = "self" | "family" | "helper" | "varies";
 
 export interface Preferences {
   concerns: ConcernId[];
@@ -89,6 +90,7 @@ export interface Preferences {
   activityLevel: ActivityLevel;
   hasBaby: boolean;
   babyStage?: BabyStage;
+  cookingSetup?: CookingSetup;
 }
 
 export type WeekPlan = Record<MealType, Meal[]>;

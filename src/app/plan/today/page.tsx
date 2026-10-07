@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Baby, ChefHat, ShoppingBasket, Share2 } from "lucide-react";
+import { Baby, BookOpen, Clock, Copy, Download, ShoppingBasket, Share2 } from "lucide-react";
 import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import { MEAL_TYPES, MEAL_TYPE_LABELS, DAYS } from "@/lib/meals";
@@ -34,6 +34,29 @@ function KitchenView() {
   const searchParams = useSearchParams();
   const [prefs, setPrefs] = useState<Preferences | null>(null);
   const [plan, setPlan] = useState<WeekPlan | null>(null);
+  const [copiedType, setCopiedType] = useState<MealType | null>(null);
+
+  const handleCopy = async (type: MealType, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedType(type);
+      track("share_copy_clicked", { mealType: type });
+      setTimeout(() => setCopiedType(null), 1500);
+    } catch {
+      // Clipboard permission denied or unavailable — WhatsApp/Download remain as fallbacks.
+    }
+  };
+
+  const handleDownload = (name: string, text: string) => {
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${name}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    track("share_download_clicked");
+  };
 
   useEffect(() => {
     const loaded = loadPreferences();
@@ -109,41 +132,50 @@ function KitchenView() {
         <div className="space-y-3">
           {MEAL_TYPES.map((type: MealType) => {
             const meal = plan[type][dayIndex];
-            const whatsappText = encodeURIComponent(
-              [
-                `${DAYS[dayIndex]}'s Kitchen – ${MEAL_TYPE_LABELS[type]}`,
-                "",
-                meal.name,
-                "",
-                ...meal.recipeSteps.map((s, i) => `${i + 1}. ${s}`),
-                ...(needsBabyStep
-                  ? [
-                      "",
-                      "Baby:",
-                      "- Set aside a portion before adding chilli/extra spices",
-                      "- No added salt",
-                      "- Soft/mashed texture",
-                    ]
-                  : []),
-              ].join("\n")
-            );
+            const onHandMatches = meal.ingredients
+              .filter((ing) => prefs.ingredientsOnHand.some((h) => ing.name.toLowerCase().includes(h.toLowerCase())))
+              .map((ing) => ing.name);
+            const canShare = prefs.cookingSetup === "helper" || prefs.cookingSetup === "varies";
+            const shareText = [
+              `${DAYS[dayIndex]} – ${MEAL_TYPE_LABELS[type]}`,
+              "",
+              meal.name,
+              "",
+              ...meal.recipeSteps.map((s, i) => `${i + 1}. ${s}`),
+              ...(needsBabyStep
+                ? [
+                    "",
+                    "Baby:",
+                    "- Set aside a portion before adding chilli/extra spices",
+                    "- No added salt",
+                    "- Soft/mashed texture",
+                  ]
+                : []),
+            ].join("\n");
 
             return (
               <div key={type} className="rounded-xl border border-line bg-card px-4 py-3">
                 <div className="text-xs uppercase tracking-wide text-muted">{MEAL_TYPE_LABELS[type]}</div>
-                <div className="font-medium text-ink mb-2">{meal.name}</div>
-                <div className="text-xs text-muted mb-3">
-                  {meal.servingSize} · {meal.caloriesPerServing} kcal
+                <div className="font-medium text-ink">{meal.name}</div>
+                <div className="text-xs text-muted mt-1 flex items-center gap-3 flex-wrap">
+                  <span className="flex items-center gap-1">
+                    <Clock size={12} /> {meal.cookTimeMinutes} min
+                  </span>
+                  <span>{meal.servingSize}</span>
+                  <span>{meal.caloriesPerServing} kcal</span>
                 </div>
 
-                <div className="text-sm text-ink space-y-1">
-                  <div>
-                    <span className="text-muted">For the family: </span>as cooked, your usual spice level.
-                  </div>
+                <div className="text-sm text-ink mt-2 space-y-1">
                   {prefs.hasBaby && prefs.babyStage && (
                     <div>
-                      <span className="text-muted">👶 For baby ({babyStageLabel}): </span>
+                      <span className="text-muted">👶 Baby ({babyStageLabel}): </span>
                       {BABY_ADAPTATION_NOTE[prefs.babyStage]}
+                    </div>
+                  )}
+                  {onHandMatches.length > 0 && (
+                    <div>
+                      <span className="text-muted">Already have: </span>
+                      {onHandMatches.join(", ")}
                     </div>
                   )}
                 </div>
@@ -154,28 +186,55 @@ function KitchenView() {
                     if ((e.target as HTMLDetailsElement).open) track("cook_instructions_viewed", { mealType: type });
                   }}
                 >
-                  <summary className="font-medium cursor-pointer flex items-center gap-1.5">
-                    <ChefHat size={14} className="text-accentDeep" /> Instructions for the cook
+                  <summary className="font-medium cursor-pointer flex items-center gap-1.5 text-accentDeep">
+                    <BookOpen size={14} /> View recipe
                   </summary>
-                  <ol className="list-decimal list-inside space-y-0.5 mt-2">
-                    {meal.recipeSteps.map((s, i) => (
-                      <li key={i}>{s}</li>
-                    ))}
-                  </ol>
-                  {needsBabyStep && (
-                    <div className="mt-2 px-3 py-2 rounded-lg bg-tagBg text-tagText text-xs">
-                      👶 Before adding chilli or extra spices: set aside a small portion for the baby.
-                    </div>
-                  )}
-                  <a
-                    href={`https://wa.me/?text=${whatsappText}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => track("send_to_cook_clicked", { mealType: type })}
-                    className="inline-flex items-center gap-1.5 mt-3 px-4 py-2 rounded-lg text-sm text-white bg-accent"
-                  >
-                    <Share2 size={14} /> Send to Cook
-                  </a>
+                  <div className="mt-2">
+                    <div className="font-medium mb-1 text-muted text-xs">Ingredients</div>
+                    <ul className="space-y-0.5">
+                      {meal.ingredients.map((ing) => (
+                        <li key={ing.name}>
+                          {ing.name} — {ing.qty}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="font-medium mb-1 mt-2 text-muted text-xs">Steps</div>
+                    <ol className="list-decimal list-inside space-y-0.5">
+                      {meal.recipeSteps.map((s, i) => (
+                        <li key={i}>{s}</li>
+                      ))}
+                    </ol>
+                    {needsBabyStep && (
+                      <div className="mt-2 px-3 py-2 rounded-lg bg-tagBg text-tagText text-xs">
+                        👶 Before adding chilli or extra spices: set aside a small portion for the baby.
+                      </div>
+                    )}
+                    {canShare && (
+                      <div className="flex gap-2 mt-3 flex-wrap">
+                        <button
+                          onClick={() => handleCopy(type, shareText)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border border-line text-ink"
+                        >
+                          <Copy size={12} /> {copiedType === type ? "Copied!" : "Copy"}
+                        </button>
+                        <a
+                          href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => track("send_to_cook_clicked", { mealType: type })}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border border-line text-ink"
+                        >
+                          <Share2 size={12} /> WhatsApp
+                        </a>
+                        <button
+                          onClick={() => handleDownload(meal.name, shareText)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border border-line text-ink"
+                        >
+                          <Download size={12} /> Download
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </details>
               </div>
             );
