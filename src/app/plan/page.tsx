@@ -232,6 +232,7 @@ export default function PlanPage() {
                     selectedConcerns={prefs.concerns}
                     alternatives={getMealOptions(type, prefs.avoidIngredients, customRecipes)}
                     onSwap={(newId) => handleSwap(type, i, newId)}
+                    dayIndex={i}
                   />
                 ))}
               </div>

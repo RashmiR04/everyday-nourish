@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import Link from "next/link";
+import { ChevronDown, ChevronUp, BookOpen } from "lucide-react";
 import { Meal, ConcernId } from "@/lib/types";
 import { MEAL_TYPE_LABELS, CONCERN_TAG_LABELS, MEAL_TYPE_TIMING_NOTE } from "@/lib/meals";
 
@@ -10,11 +11,13 @@ export default function MealCard({
   selectedConcerns,
   alternatives,
   onSwap,
+  dayIndex,
 }: {
   meal: Meal;
   selectedConcerns: ConcernId[];
   alternatives?: Meal[];
   onSwap?: (newDishId: string) => void;
+  dayIndex?: number;
 }) {
   const [open, setOpen] = useState(false);
   const relevantTags = meal.concernTags.filter((t) => selectedConcerns.includes(t));
@@ -62,24 +65,14 @@ export default function MealCard({
               </select>
             </div>
           )}
-          <div>
-            <div className="font-medium mb-1 text-muted">Ingredients</div>
-            <ul className="space-y-0.5">
-              {meal.ingredients.map((ing) => (
-                <li key={ing.name}>
-                  {ing.name} — {ing.qty}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <div className="font-medium mb-1 text-muted">Steps</div>
-            <ol className="list-decimal list-inside space-y-0.5">
-              {meal.recipeSteps.map((s, i) => (
-                <li key={i}>{s}</li>
-              ))}
-            </ol>
-          </div>
+          {dayIndex !== undefined && (
+            <Link
+              href={`/plan/today?day=${dayIndex}`}
+              className="inline-flex items-center gap-1.5 text-accentDeep font-medium"
+            >
+              <BookOpen size={14} /> View recipe (ingredients &amp; steps)
+            </Link>
+          )}
           <div>
             <div className="font-medium mb-1 text-muted">Nutrients (per serving)</div>
             <div className="flex flex-wrap gap-x-4 gap-y-1">
