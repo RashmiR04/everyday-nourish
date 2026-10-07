@@ -224,3 +224,40 @@ export function computeDayTopUp(plan: WeekPlan, dayIndex: number, targetEnergyKc
   if (totals.kcal >= targetEnergyKcal * 0.9) return null;
   return buildTopUp(targetEnergyKcal - totals.kcal);
 }
+
+/**
+ * All dishes of a given meal type a person could swap to, respecting the same
+ * avoid-ingredients filter (and the same empty-pool fallback) as generatePlan.
+ */
+export function getMealOptions(type: MealType, avoidIngredients: string[] = []): Meal[] {
+  const avoidLower = avoidIngredients.map((a) => a.toLowerCase()).filter(Boolean);
+  const fullPool = MEALS.filter((m) => m.mealType === type);
+  const filteredPool = fullPool.filter(
+    (m) => !m.ingredients.some((ing) => avoidLower.some((a) => ing.name.toLowerCase().includes(a)))
+  );
+  return filteredPool.length > 0 ? filteredPool : fullPool;
+}
+
+/**
+ * Replaces one day's dish for a given meal type with a different one the
+ * person picked, scaling it the same way generatePlan would (toward that meal
+ * type's share of the day's energy target) so a manual swap doesn't undo the
+ * day's calorie balance.
+ */
+export function swapDish(
+  plan: WeekPlan,
+  type: MealType,
+  dayIndex: number,
+  newDishId: string,
+  targetEnergyKcal?: number
+): WeekPlan {
+  const base = MEALS.find((m) => m.id === newDishId && m.mealType === type);
+  if (!base) return plan;
+  const newMeal = targetEnergyKcal
+    ? scaleMeal(base, Math.min(MAX_PORTION_SCALE, Math.max(1, (targetEnergyKcal * MEAL_TYPE_ENERGY_SHARE[type]) / base.caloriesPerServing)))
+    : base;
+  return {
+    ...plan,
+    [type]: plan[type].map((m, i) => (i === dayIndex ? newMeal : m)),
+  };
+}

@@ -8,9 +8,13 @@ import { MEAL_TYPE_LABELS, CONCERN_TAG_LABELS, MEAL_TYPE_TIMING_NOTE } from "@/l
 export default function MealCard({
   meal,
   selectedConcerns,
+  alternatives,
+  onSwap,
 }: {
   meal: Meal;
   selectedConcerns: ConcernId[];
+  alternatives?: Meal[];
+  onSwap?: (newDishId: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const relevantTags = meal.concernTags.filter((t) => selectedConcerns.includes(t));
@@ -42,6 +46,22 @@ export default function MealCard({
 
       {open && (
         <div className="px-4 pb-4 pt-1 space-y-3 text-sm text-ink">
+          {onSwap && alternatives && alternatives.length > 1 && (
+            <div>
+              <label className="font-medium mb-1 text-muted block">Swap this dish</label>
+              <select
+                value={meal.id}
+                onChange={(e) => e.target.value !== meal.id && onSwap(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
+              >
+                {alternatives.map((alt) => (
+                  <option key={alt.id} value={alt.id}>
+                    {alt.name} ({alt.caloriesPerServing} kcal)
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div>
             <div className="font-medium mb-1 text-muted">Ingredients</div>
             <ul className="space-y-0.5">
