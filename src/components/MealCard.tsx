@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, CheckCircle2, Circle } from "lucide-react";
 import { Meal, ConcernId } from "@/lib/types";
 import { MEAL_TYPE_LABELS, CONCERN_TAG_LABELS, MEAL_TYPE_TIMING_NOTE } from "@/lib/meals";
 
@@ -10,39 +10,59 @@ export default function MealCard({
   selectedConcerns,
   alternatives,
   onSwap,
+  completed,
+  onToggleComplete,
 }: {
   meal: Meal;
   selectedConcerns: ConcernId[];
   alternatives?: Meal[];
   onSwap?: (newDishId: string) => void;
+  completed?: boolean;
+  onToggleComplete?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const relevantTags = meal.concernTags.filter((t) => selectedConcerns.includes(t));
 
   return (
     <div className="rounded-xl border border-line bg-card overflow-hidden">
-      <button onClick={() => setOpen(!open)} className="w-full text-left px-4 py-3 flex items-start justify-between gap-3">
-        <div>
-          <div className="text-xs uppercase tracking-wide text-muted">{MEAL_TYPE_LABELS[meal.mealType]}</div>
-          <div className="font-medium text-ink">{meal.name}</div>
-          <div className="text-xs mt-1 text-muted">
-            {meal.servingSize} · {meal.caloriesPerServing} kcal
-            {meal.portionScale && (
-              <span> · portion scaled ~{meal.portionScale.toFixed(1)}× from the base recipe</span>
+      <div className="w-full px-4 py-3 flex items-start justify-between gap-3">
+        <div className="flex items-start gap-2.5 flex-1 min-w-0 cursor-pointer" onClick={() => setOpen(!open)}>
+          {onToggleComplete && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleComplete();
+              }}
+              className="mt-0.5 shrink-0 text-accentDeep"
+              aria-label={completed ? "Mark as not done" : "Mark as done"}
+            >
+              {completed ? <CheckCircle2 size={20} /> : <Circle size={20} className="text-muted" />}
+            </button>
+          )}
+          <div className="min-w-0">
+            <div className="text-xs uppercase tracking-wide text-muted">{MEAL_TYPE_LABELS[meal.mealType]}</div>
+            <div className={`font-medium text-ink ${completed ? "line-through opacity-50" : ""}`}>{meal.name}</div>
+            <div className="text-xs mt-1 text-muted">
+              {meal.servingSize} · {meal.caloriesPerServing} kcal
+              {meal.portionScale && (
+                <span> · portion scaled ~{meal.portionScale.toFixed(1)}× from the base recipe</span>
+              )}
+            </div>
+            {relevantTags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {relevantTags.map((tag) => (
+                  <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-tagBg text-tagText">
+                    {CONCERN_TAG_LABELS[tag]}
+                  </span>
+                ))}
+              </div>
             )}
           </div>
-          {relevantTags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {relevantTags.map((tag) => (
-                <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-tagBg text-tagText">
-                  {CONCERN_TAG_LABELS[tag]}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
-        {open ? <ChevronUp size={18} className="text-muted shrink-0" /> : <ChevronDown size={18} className="text-muted shrink-0" />}
-      </button>
+        <button onClick={() => setOpen(!open)} className="shrink-0" aria-label={open ? "Collapse" : "Expand"}>
+          {open ? <ChevronUp size={18} className="text-muted" /> : <ChevronDown size={18} className="text-muted" />}
+        </button>
+      </div>
 
       {open && (
         <div className="px-4 pb-4 pt-1 space-y-3 text-sm text-ink">

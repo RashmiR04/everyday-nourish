@@ -61,6 +61,32 @@ export function loadCustomRecipes(): Meal[] {
   }
 }
 
+const COMPLETED_MEALS_KEY = "everyday-nourish:completedMeals";
+
+// Lets a plan double as a daily checklist/reminder: which meal slots (keyed by
+// "dayIndex:mealType") a person has ticked off. Cleared whenever a new plan is
+// generated (see /plan/new), since a fresh week shouldn't start pre-ticked.
+export function saveCompletedMeals(completed: Record<string, boolean>): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(COMPLETED_MEALS_KEY, JSON.stringify(completed));
+}
+
+export function loadCompletedMeals(): Record<string, boolean> {
+  if (typeof window === "undefined") return {};
+  const raw = window.localStorage.getItem(COMPLETED_MEALS_KEY);
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw) as Record<string, boolean>;
+  } catch {
+    return {};
+  }
+}
+
+export function clearCompletedMeals(): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(COMPLETED_MEALS_KEY);
+}
+
 export function saveBabyStage(stage: string): void {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(BABY_STAGE_KEY, stage);

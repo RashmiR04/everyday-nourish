@@ -10,7 +10,15 @@ import MealCard from "@/components/MealCard";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import { generatePlan, computeDailyTotals, computeDayTopUp, getMealOptions, swapDish } from "@/lib/planner";
 import { MEAL_TYPES, DAYS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN_DISCLAIMER } from "@/lib/meals";
-import { loadPreferences, loadPlan, savePlan, isReturningVisitor, loadCustomRecipes } from "@/lib/storage";
+import {
+  loadPreferences,
+  loadPlan,
+  savePlan,
+  isReturningVisitor,
+  loadCustomRecipes,
+  loadCompletedMeals,
+  saveCompletedMeals,
+} from "@/lib/storage";
 import { Meal, MealType, Preferences, WeekPlan } from "@/lib/types";
 import { computePersonalTargets, PERSONAL_TARGETS_SOURCE } from "@/lib/nutritionTargets";
 import { detectFoodGroups } from "@/lib/foodGroups";
@@ -38,6 +46,7 @@ export default function PlanPage() {
   const [prefs, setPrefs] = useState<Preferences | null>(null);
   const [plan, setPlan] = useState<WeekPlan | null>(null);
   const [customRecipes, setCustomRecipes] = useState<Meal[]>([]);
+  const [completed, setCompleted] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const loaded = loadPreferences();
@@ -47,6 +56,7 @@ export default function PlanPage() {
     }
     setPrefs(loaded);
     setCustomRecipes(loadCustomRecipes());
+    setCompleted(loadCompletedMeals());
     // Prefer the saved plan (preserves any swaps) over regenerating from
     // scratch. Only falls back to generating fresh if none was saved yet —
     // normally /plan/new always saves one before sending the user here.
@@ -71,6 +81,14 @@ export default function PlanPage() {
       if (!prev) return prev;
       const updated = swapDish(prev, type, dayIndex, newDishId, targets.energyKcal, customRecipes);
       savePlan(updated);
+      return updated;
+    });
+  };
+
+  const toggleComplete = (key: string) => {
+    setCompleted((prev) => {
+      const updated = { ...prev, [key]: !prev[key] };
+      saveCompletedMeals(updated);
       return updated;
     });
   };
@@ -196,20 +214,30 @@ export default function PlanPage() {
               </details>
 
               <div className="grid sm:grid-cols-2 gap-3 items-start">
-                {MEAL_TYPES.map((type) => (
-                  <MealCard
-                    key={type}
-                    meal={plan[type][i]}
-                    selectedConcerns={prefs.concerns}
-                    alternatives={getMealOptions(type, prefs.avoidIngredients, customRecipes)}
-                    onSwap={(newId) => handleSwap(type, i, newId)}
-                  />
-                ))}
+                {MEAL_TYPES.map((type) => {
+                  const key = `${i}:${type}`;
+                  return (
+                    <MealCard
+                      key={type}
+                      meal={plan[type][i]}
+                      selectedConcerns={prefs.concerns}
+                      alternatives={getMealOptions(type, prefs.avoidIngredients, customRecipes)}
+                      onSwap={(newId) => handleSwap(type, i, newId)}
+                      completed={!!completed[key]}
+                      onToggleComplete={() => toggleComplete(key)}
+                    />
+                  );
+                })}
               </div>
 
               {topUp && (
                 <div className="mt-3">
-                  <MealCard meal={topUp} selectedConcerns={prefs.concerns} />
+                  <MealCard
+                    meal={topUp}
+                    selectedConcerns={prefs.concerns}
+                    completed={!!completed[`${i}:topup`]}
+                    onToggleComplete={() => toggleComplete(`${i}:topup`)}
+                  />
                 </div>
               )}
             </div>
