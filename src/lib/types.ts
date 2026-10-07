@@ -81,6 +81,7 @@ export type ActivityLevel = "sedentary" | "moderate" | "active";
 export interface Preferences {
   concerns: ConcernId[];
   ingredientsOnHand: string[];
+  avoidIngredients: string[];
   household: number;
   sex: Sex;
   age: number;

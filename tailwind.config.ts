@@ -11,7 +11,7 @@ const config: Config = {
         bg: "#FAF6ED",
         card: "#FFFFFF",
         ink: "#2B2620",
-        muted: "#8A7F6E",
+        muted: "#6B5D4A",
         line: "#E5DCC8",
         accent: "#A8732A",
         accentDeep: "#4B5D3A",

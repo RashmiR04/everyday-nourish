@@ -24,7 +24,7 @@ export default function GroceryListPage() {
       return;
     }
     const personalTargets = computePersonalTargets(loaded.sex, loaded.age, loaded.weightKg, loaded.activityLevel);
-    const plan = generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal);
+    const plan = generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal, loaded.avoidIngredients);
     setPrefs(loaded);
     setGrocery(buildGroceryList(plan, loaded.household));
     track("grocery_list_viewed");

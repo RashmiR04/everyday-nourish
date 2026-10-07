@@ -116,11 +116,29 @@ function scaleMeal(meal: Meal, factor: number): Meal {
  * factor per meal type keeps every day close to the target, instead of
  * days swinging by 600+ kcal depending on which dishes happened to land
  * together that day.
+ *
+ * avoidIngredients filters out any dish containing a matching ingredient
+ * (substring match, same convention as ingredientsOnHand) before ranking.
  */
-export function generatePlan(concerns: ConcernId[], ingredientsOnHand: string[], targetEnergyKcal?: number): WeekPlan {
+export function generatePlan(
+  concerns: ConcernId[],
+  ingredientsOnHand: string[],
+  targetEnergyKcal?: number,
+  avoidIngredients: string[] = []
+): WeekPlan {
   const plan = {} as WeekPlan;
+  const avoidLower = avoidIngredients.map((a) => a.toLowerCase()).filter(Boolean);
+
   MEAL_TYPES.forEach((type) => {
-    const pool = MEALS.filter((m) => m.mealType === type);
+    const fullPool = MEALS.filter((m) => m.mealType === type);
+    // Drop any dish containing an avoided ingredient — but if that would wipe
+    // out every option for this meal type, fall back to the full pool rather
+    // than crash or leave the slot empty. Better to show a dish the person
+    // wanted to avoid than no plan at all; the honest fix is a bigger dataset.
+    const filteredPool = fullPool.filter(
+      (m) => !m.ingredients.some((ing) => avoidLower.some((a) => ing.name.toLowerCase().includes(a)))
+    );
+    const pool = filteredPool.length > 0 ? filteredPool : fullPool;
     const ranked = [...pool].sort(
       (a, b) => scoreMeal(b, concerns, ingredientsOnHand) - scoreMeal(a, concerns, ingredientsOnHand)
     );

@@ -46,7 +46,7 @@ export default function PlanPage() {
     }
     setPrefs(loaded);
     const personalTargets = computePersonalTargets(loaded.sex, loaded.age, loaded.weightKg, loaded.activityLevel);
-    setPlan(generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal));
+    setPlan(generatePlan(loaded.concerns, loaded.ingredientsOnHand, personalTargets.energyKcal, loaded.avoidIngredients));
     track("plan_viewed", { returningVisitor: isReturningVisitor() });
   }, [router]);
 

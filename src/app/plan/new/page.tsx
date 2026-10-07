@@ -38,6 +38,8 @@ export default function NewPlanPage() {
   const [household, setHousehold] = useState(2);
   const [ingredientInput, setIngredientInput] = useState("");
   const [ingredientsOnHand, setIngredientsOnHand] = useState<string[]>([]);
+  const [avoidInput, setAvoidInput] = useState("");
+  const [avoidIngredients, setAvoidIngredients] = useState<string[]>([]);
   const [sex, setSex] = useState<Sex>("female");
   const [age, setAge] = useState(30);
   const [weightKg, setWeightKg] = useState(60);
@@ -55,10 +57,19 @@ export default function NewPlanPage() {
     setIngredientInput("");
   };
 
+  const addAvoid = () => {
+    const val = avoidInput.trim();
+    if (val && !avoidIngredients.includes(val)) {
+      setAvoidIngredients([...avoidIngredients, val]);
+    }
+    setAvoidInput("");
+  };
+
   const buildPlan = () => {
     const prefs: Preferences = {
       concerns: selectedConcerns,
       ingredientsOnHand,
+      avoidIngredients,
       household: Math.max(1, household || 1),
       sex,
       age: Math.min(100, Math.max(18, age || 18)),
@@ -194,6 +205,34 @@ export default function NewPlanPage() {
                 <span key={ing} className="text-xs px-2 py-1 rounded-full flex items-center gap-1 bg-tagBg text-tagText">
                   {ing}
                   <X size={12} className="cursor-pointer" onClick={() => setIngredientsOnHand(ingredientsOnHand.filter((i) => i !== ing))} />
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div>
+          <div className="text-sm font-medium mb-2 text-ink">
+            Any ingredients to avoid? We&apos;ll leave dishes with these out of your plan.
+          </div>
+          <div className="flex gap-2">
+            <input
+              value={avoidInput}
+              onChange={(e) => setAvoidInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addAvoid()}
+              placeholder="e.g. mushroom"
+              className="flex-1 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
+            />
+            <button onClick={addAvoid} className="px-4 py-2 rounded-lg text-sm text-white bg-accentDeep">
+              Add
+            </button>
+          </div>
+          {avoidIngredients.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-2">
+              {avoidIngredients.map((ing) => (
+                <span key={ing} className="text-xs px-2 py-1 rounded-full flex items-center gap-1 bg-tagBg text-tagText">
+                  {ing}
+                  <X size={12} className="cursor-pointer" onClick={() => setAvoidIngredients(avoidIngredients.filter((i) => i !== ing))} />
                 </span>
               ))}
             </div>

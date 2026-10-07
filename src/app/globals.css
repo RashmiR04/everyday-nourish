@@ -3,6 +3,13 @@
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
+html {
+  /* Bumps the base size so all of Tailwind's rem-based text utilities
+     (text-sm, text-xs, etc.) scale up proportionally, rather than editing
+     font sizes one class at a time across every component. */
+  font-size: 112.5%;
+}
+
 body {
   background-color: #faf6ed;
   color: #2b2620;
