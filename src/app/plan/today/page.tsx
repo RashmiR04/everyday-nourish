@@ -85,7 +85,12 @@ function KitchenView() {
 
   if (!prefs || !plan) return null;
 
-  const dayParam = Number(searchParams.get("day"));
+  // Number(null) is 0, not NaN — so a missing "day" param must be checked for
+  // explicitly, otherwise a plain /plan/today link (no query string) would
+  // silently resolve to day 0 (Monday) instead of falling back to today's
+  // actual date.
+  const dayParamRaw = searchParams.get("day");
+  const dayParam = dayParamRaw !== null ? Number(dayParamRaw) : NaN;
   const hasValidDayParam = !Number.isNaN(dayParam) && dayParam >= 0 && dayParam <= 6;
   const dayIndex = hasValidDayParam ? dayParam : todayIndex();
   const isViewingToday = dayIndex === todayIndex();
