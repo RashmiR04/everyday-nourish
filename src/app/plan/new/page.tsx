@@ -106,7 +106,7 @@ export default function NewPlanPage() {
           <div className="text-sm font-medium mb-2 text-ink">
             About you — used to estimate your daily nutrition targets
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="flex flex-wrap gap-3">
             <div>
               <label className="block text-xs mb-1 text-muted">Sex</label>
               <div className="flex gap-2">
@@ -142,7 +142,7 @@ export default function NewPlanPage() {
                 className="w-20 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
               />
             </div>
-            <div className="col-span-2 sm:col-span-4 min-w-0">
+            <div className="flex-1 min-w-[220px]">
               <label className="block text-xs mb-1 text-muted">Activity level</label>
               <select
                 value={activityLevel}
