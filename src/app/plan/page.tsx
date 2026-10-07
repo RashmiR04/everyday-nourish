@@ -157,18 +157,18 @@ export default function PlanPage() {
           const suggestion = !energyGood
             ? "Even with an added fruit & nuts top-up, this day falls short of your estimated energy need — consider a larger top-up or portions than shown."
             : !fruitGood
-              ? "One simple improvement: add a serving of fruit today."
+              ? "One simple improvement: add a serving of fruit."
               : !fibreGood
-                ? "One simple improvement: add a fibre-rich side (extra vegetables, or a fruit) today."
+                ? "One simple improvement: add a fibre-rich side (extra vegetables, or a fruit)."
                 : !present.vegetables
-                  ? "One simple improvement: add a vegetable side today."
+                  ? "One simple improvement: add a vegetable side."
                   : !proteinGood
-                    ? "One simple improvement: add a protein-rich side (dal, curd, or paneer) today."
+                    ? "One simple improvement: add a protein-rich side (dal, curd, or paneer)."
                     : !present.pulses
-                      ? "One simple improvement: add a pulse-based dish (dal, rajma, chana) today."
+                      ? "One simple improvement: add a pulse-based dish (dal, rajma, chana)."
                       : !present.nutsSeeds
-                        ? "One simple improvement: add a small portion of nuts or seeds today."
-                        : "Today covers the key food groups and nutrition targets well.";
+                        ? "One simple improvement: add a small portion of nuts or seeds."
+                        : "This day covers the key food groups and nutrition targets well.";
 
           return (
             <div key={day}>
@@ -180,7 +180,7 @@ export default function PlanPage() {
               </Link>
 
               <div className="rounded-xl border border-line bg-card px-4 py-3 mb-3 text-sm text-ink">
-                <div className="font-medium mb-2">Today&apos;s balance</div>
+                <div className="font-medium mb-2">{day}&apos;s balance</div>
                 <div className="flex flex-wrap gap-2">
                   <BalanceItem ok={energyGood} label="Energy" />
                   <BalanceItem ok={proteinGood} label="Protein" />
