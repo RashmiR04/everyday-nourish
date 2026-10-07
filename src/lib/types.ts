@@ -87,6 +87,8 @@ export interface Preferences {
   age: number;
   weightKg: number;
   activityLevel: ActivityLevel;
+  hasBaby: boolean;
+  babyStage?: BabyStage;
 }
 
 export type WeekPlan = Record<MealType, Meal[]>;

@@ -99,11 +99,14 @@ export default function PlanPage() {
       <div className="space-y-6">
         <DisclaimerBanner />
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-y-2">
           <Link href="/plan/new" className="text-sm text-accentDeep underline">
             Change preferences / regenerate
           </Link>
           <div className="flex items-center gap-4">
+            <Link href="/plan/today" className="text-sm text-accentDeep underline">
+              Today&apos;s Kitchen
+            </Link>
             <Link href="/my-recipes" className="text-sm text-accentDeep underline">
               My recipes
             </Link>

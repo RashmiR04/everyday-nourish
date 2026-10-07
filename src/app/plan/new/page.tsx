@@ -7,7 +7,8 @@ import { X, Sparkles } from "lucide-react";
 import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import { CONCERNS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN_DISCLAIMER } from "@/lib/meals";
-import { ActivityLevel, ConcernId, Preferences, Sex } from "@/lib/types";
+import { BABY_STAGES } from "@/lib/babyMeals";
+import { ActivityLevel, BabyStage, ConcernId, Preferences, Sex } from "@/lib/types";
 import { savePreferences, savePlan, clearDayNotes } from "@/lib/storage";
 import { ACTIVITY_LABELS, computePersonalTargets } from "@/lib/nutritionTargets";
 import { generatePlan } from "@/lib/planner";
@@ -46,6 +47,8 @@ export default function NewPlanPage() {
   const [age, setAge] = useState(30);
   const [weightKg, setWeightKg] = useState(60);
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>("sedentary");
+  const [hasBaby, setHasBaby] = useState(false);
+  const [babyStage, setBabyStage] = useState<BabyStage>("6-8m");
 
   const toggleConcern = (id: ConcernId) => {
     setSelectedConcerns((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
@@ -77,6 +80,8 @@ export default function NewPlanPage() {
       age: Math.min(100, Math.max(18, age || 18)),
       weightKg: Math.min(200, Math.max(30, weightKg || 30)),
       activityLevel,
+      hasBaby,
+      babyStage: hasBaby ? babyStage : undefined,
     };
     savePreferences(prefs);
     const targets = computePersonalTargets(prefs.sex, prefs.age, prefs.weightKg, prefs.activityLevel);
@@ -86,8 +91,9 @@ export default function NewPlanPage() {
       concernCount: selectedConcerns.length,
       hasIngredientsOnHand: ingredientsOnHand.length > 0,
       household,
+      hasBaby,
     });
-    router.push("/plan");
+    router.push("/plan/today");
   };
 
   return (
@@ -254,6 +260,34 @@ export default function NewPlanPage() {
             onBlur={() => setHousehold((h) => Math.max(1, h || 1))}
             className="w-24 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
           />
+        </div>
+
+        <div>
+          <div className="text-sm font-medium mb-2 text-ink">Is there a baby in the household?</div>
+          <div className="flex flex-wrap gap-2">
+            <Pill active={!hasBaby} onClick={() => setHasBaby(false)}>
+              No
+            </Pill>
+            <Pill active={hasBaby} onClick={() => setHasBaby(true)}>
+              Yes
+            </Pill>
+          </div>
+          {hasBaby && (
+            <div className="mt-3">
+              <label className="block text-xs mb-1 text-muted">Baby&apos;s stage</label>
+              <div className="flex flex-wrap gap-2">
+                {BABY_STAGES.map((s) => (
+                  <Pill key={s.id} active={babyStage === s.id} onClick={() => setBabyStage(s.id)}>
+                    {s.label}
+                  </Pill>
+                ))}
+              </div>
+              <div className="text-xs mt-2 text-muted">
+                Used to show how to adapt today&apos;s family meals for your baby — for full baby-specific dishes and
+                nutrient coverage, see Baby&apos;s plan separately.
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-4">
