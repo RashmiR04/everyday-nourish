@@ -16,8 +16,8 @@ import {
   savePlan,
   isReturningVisitor,
   loadCustomRecipes,
-  loadCompletedMeals,
-  saveCompletedMeals,
+  loadDayNotes,
+  saveDayNotes,
 } from "@/lib/storage";
 import { Meal, MealType, Preferences, WeekPlan } from "@/lib/types";
 import { computePersonalTargets, PERSONAL_TARGETS_SOURCE } from "@/lib/nutritionTargets";
@@ -46,7 +46,7 @@ export default function PlanPage() {
   const [prefs, setPrefs] = useState<Preferences | null>(null);
   const [plan, setPlan] = useState<WeekPlan | null>(null);
   const [customRecipes, setCustomRecipes] = useState<Meal[]>([]);
-  const [completed, setCompleted] = useState<Record<string, boolean>>({});
+  const [dayNotes, setDayNotes] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const loaded = loadPreferences();
@@ -56,7 +56,7 @@ export default function PlanPage() {
     }
     setPrefs(loaded);
     setCustomRecipes(loadCustomRecipes());
-    setCompleted(loadCompletedMeals());
+    setDayNotes(loadDayNotes());
     // Prefer the saved plan (preserves any swaps) over regenerating from
     // scratch. Only falls back to generating fresh if none was saved yet —
     // normally /plan/new always saves one before sending the user here.
@@ -85,10 +85,10 @@ export default function PlanPage() {
     });
   };
 
-  const toggleComplete = (key: string) => {
-    setCompleted((prev) => {
-      const updated = { ...prev, [key]: !prev[key] };
-      saveCompletedMeals(updated);
+  const updateDayNote = (dayIndex: number, value: string) => {
+    setDayNotes((prev) => {
+      const updated = { ...prev, [dayIndex]: value };
+      saveDayNotes(updated);
       return updated;
     });
   };
@@ -214,32 +214,31 @@ export default function PlanPage() {
               </details>
 
               <div className="grid sm:grid-cols-2 gap-3 items-start">
-                {MEAL_TYPES.map((type) => {
-                  const key = `${i}:${type}`;
-                  return (
-                    <MealCard
-                      key={type}
-                      meal={plan[type][i]}
-                      selectedConcerns={prefs.concerns}
-                      alternatives={getMealOptions(type, prefs.avoidIngredients, customRecipes)}
-                      onSwap={(newId) => handleSwap(type, i, newId)}
-                      completed={!!completed[key]}
-                      onToggleComplete={() => toggleComplete(key)}
-                    />
-                  );
-                })}
+                {MEAL_TYPES.map((type) => (
+                  <MealCard
+                    key={type}
+                    meal={plan[type][i]}
+                    selectedConcerns={prefs.concerns}
+                    alternatives={getMealOptions(type, prefs.avoidIngredients, customRecipes)}
+                    onSwap={(newId) => handleSwap(type, i, newId)}
+                  />
+                ))}
               </div>
 
               {topUp && (
                 <div className="mt-3">
-                  <MealCard
-                    meal={topUp}
-                    selectedConcerns={prefs.concerns}
-                    completed={!!completed[`${i}:topup`]}
-                    onToggleComplete={() => toggleComplete(`${i}:topup`)}
-                  />
+                  <MealCard meal={topUp} selectedConcerns={prefs.concerns} />
                 </div>
               )}
+
+              <div className="mt-3">
+                <input
+                  value={dayNotes[i] ?? ""}
+                  onChange={(e) => updateDayNote(i, e.target.value)}
+                  placeholder="Add a reminder for this day (e.g. soak the rajma tonight)"
+                  className="w-full px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
+                />
+              </div>
             </div>
           );
         })}

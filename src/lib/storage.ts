@@ -61,30 +61,31 @@ export function loadCustomRecipes(): Meal[] {
   }
 }
 
-const COMPLETED_MEALS_KEY = "everyday-nourish:completedMeals";
+const DAY_NOTES_KEY = "everyday-nourish:dayNotes";
 
-// Lets a plan double as a daily checklist/reminder: which meal slots (keyed by
-// "dayIndex:mealType") a person has ticked off. Cleared whenever a new plan is
-// generated (see /plan/new), since a fresh week shouldn't start pre-ticked.
-export function saveCompletedMeals(completed: Record<string, boolean>): void {
+// Lets a plan double as a reminder board: a short personal note per day (e.g.
+// "soak the rajma tonight"), keyed by day index. Cleared whenever a new plan
+// is generated (see /plan/new), since a fresh week shouldn't carry over notes
+// written for a different plan.
+export function saveDayNotes(notes: Record<string, string>): void {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(COMPLETED_MEALS_KEY, JSON.stringify(completed));
+  window.localStorage.setItem(DAY_NOTES_KEY, JSON.stringify(notes));
 }
 
-export function loadCompletedMeals(): Record<string, boolean> {
+export function loadDayNotes(): Record<string, string> {
   if (typeof window === "undefined") return {};
-  const raw = window.localStorage.getItem(COMPLETED_MEALS_KEY);
+  const raw = window.localStorage.getItem(DAY_NOTES_KEY);
   if (!raw) return {};
   try {
-    return JSON.parse(raw) as Record<string, boolean>;
+    return JSON.parse(raw) as Record<string, string>;
   } catch {
     return {};
   }
 }
 
-export function clearCompletedMeals(): void {
+export function clearDayNotes(): void {
   if (typeof window === "undefined") return;
-  window.localStorage.removeItem(COMPLETED_MEALS_KEY);
+  window.localStorage.removeItem(DAY_NOTES_KEY);
 }
 
 export function saveBabyStage(stage: string): void {

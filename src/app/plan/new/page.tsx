@@ -8,7 +8,7 @@ import Nav from "@/components/Nav";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import { CONCERNS, CONCERN_TAG_LABELS, CONCERN_PATTERN_GUIDANCE, CONCERN_PATTERN_DISCLAIMER } from "@/lib/meals";
 import { ActivityLevel, ConcernId, Preferences, Sex } from "@/lib/types";
-import { savePreferences, savePlan, clearCompletedMeals } from "@/lib/storage";
+import { savePreferences, savePlan, clearDayNotes } from "@/lib/storage";
 import { ACTIVITY_LABELS, computePersonalTargets } from "@/lib/nutritionTargets";
 import { generatePlan } from "@/lib/planner";
 import { track } from "@vercel/analytics";
@@ -81,7 +81,7 @@ export default function NewPlanPage() {
     savePreferences(prefs);
     const targets = computePersonalTargets(prefs.sex, prefs.age, prefs.weightKg, prefs.activityLevel);
     savePlan(generatePlan(prefs.concerns, prefs.ingredientsOnHand, targets.energyKcal, prefs.avoidIngredients));
-    clearCompletedMeals();
+    clearDayNotes();
     track("plan_generated", {
       concernCount: selectedConcerns.length,
       hasIngredientsOnHand: ingredientsOnHand.length > 0,
