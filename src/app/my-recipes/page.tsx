@@ -8,7 +8,7 @@ import { INGREDIENT_NAMES, PER_PIECE_INGREDIENTS, computeNutritionFromIngredient
 import { buildCustomMeal } from "@/lib/customRecipes";
 import { loadCustomRecipes, saveCustomRecipes } from "@/lib/storage";
 import { Ingredient, Meal, MealType } from "@/lib/types";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/analytics";
 
 type Unit = "g" | "ml" | "piece";
 

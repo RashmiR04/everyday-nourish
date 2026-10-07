@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChefHat, ShoppingBasket, Share2 } from "lucide-react";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/analytics";
 
 function Card({ title, icon, children }: { title: string; icon?: React.ReactNode; children: React.ReactNode }) {
   return (

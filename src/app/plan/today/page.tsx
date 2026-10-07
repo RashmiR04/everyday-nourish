@@ -12,7 +12,7 @@ import { BABY_ADAPTATION_NOTE, needsBabyCookStep } from "@/lib/babyAdaptation";
 import { buildDayGroceryList } from "@/lib/groceryList";
 import { loadPreferences, loadPlan } from "@/lib/storage";
 import { MealType, Preferences, WeekPlan } from "@/lib/types";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/analytics";
 
 // Monday = 0 in DAYS/WeekPlan, but JS Date.getDay() is Sunday = 0 — this
 // re-indexes so "today" lines up with the right slot in an already-generated

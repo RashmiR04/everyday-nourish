@@ -22,7 +22,7 @@ import {
 import { Meal, MealType, Preferences, WeekPlan } from "@/lib/types";
 import { computePersonalTargets, PERSONAL_TARGETS_SOURCE } from "@/lib/nutritionTargets";
 import { detectFoodGroups } from "@/lib/foodGroups";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/analytics";
 
 function Dot({ ok }: { ok: boolean }) {
   return (

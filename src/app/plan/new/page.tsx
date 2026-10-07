@@ -12,7 +12,7 @@ import { ActivityLevel, BabyStage, ConcernId, CookingSetup, Preferences, Sex } f
 import { savePreferences, savePlan, clearDayNotes } from "@/lib/storage";
 import { ACTIVITY_LABELS, computePersonalTargets } from "@/lib/nutritionTargets";
 import { generatePlan } from "@/lib/planner";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/analytics";
 
 function Pill({
   active,

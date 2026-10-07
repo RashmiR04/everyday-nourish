@@ -10,7 +10,7 @@ import { buildGroceryList } from "@/lib/groceryList";
 import { loadPreferences, loadPlan, savePlan } from "@/lib/storage";
 import { Preferences, GroceryItem } from "@/lib/types";
 import { computePersonalTargets } from "@/lib/nutritionTargets";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/analytics";
 
 export default function GroceryListPage() {
   const router = useRouter();

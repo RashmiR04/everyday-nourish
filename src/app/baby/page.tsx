@@ -10,7 +10,7 @@ import { BABY_STAGES, NUTRIENTS, NUTRIENT_LABELS } from "@/lib/babyMeals";
 import { DAYS } from "@/lib/meals";
 import { BabyStage } from "@/lib/types";
 import { saveBabyStage, loadBabyStage } from "@/lib/storage";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/analytics";
 
 type Step = "stage" | "plan" | "nutrients";
 

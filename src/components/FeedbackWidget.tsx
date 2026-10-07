@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { track } from "@vercel/analytics";
+import { track } from "@/lib/analytics";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { hasGivenFeedback, markFeedbackGiven } from "@/lib/storage";
 
