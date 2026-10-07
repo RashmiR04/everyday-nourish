@@ -142,12 +142,12 @@ export default function NewPlanPage() {
                 className="w-20 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
               />
             </div>
-            <div>
+            <div className="min-w-0">
               <label className="block text-xs mb-1 text-muted">Activity level</label>
               <select
                 value={activityLevel}
                 onChange={(e) => setActivityLevel(e.target.value as ActivityLevel)}
-                className="px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
+                className="w-full px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
               >
                 {(Object.keys(ACTIVITY_LABELS) as ActivityLevel[]).map((level) => (
                   <option key={level} value={level}>
