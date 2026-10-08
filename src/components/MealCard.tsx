@@ -13,12 +13,14 @@ export default function MealCard({
   alternatives,
   onSwap,
   dayIndex,
+  extra,
 }: {
   meal: Meal;
   selectedConcerns: ConcernId[];
   alternatives?: Meal[];
   onSwap?: (newDishId: string) => void;
   dayIndex?: number;
+  extra?: Meal;
 }) {
   const [open, setOpen] = useState(false);
   const relevantTags = meal.concernTags.filter((t) => selectedConcerns.includes(t));
@@ -42,6 +44,11 @@ export default function MealCard({
               <span> · portion scaled ~{meal.portionScale.toFixed(1)}× from the base recipe</span>
             )}
           </div>
+          {extra && (
+            <div className="text-xs mt-1 text-muted">
+              + {extra.name} — {extra.servingSize} · {extra.caloriesPerServing} kcal
+            </div>
+          )}
           {relevantTags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {relevantTags.map((tag) => (
@@ -81,13 +88,23 @@ export default function MealCard({
               <BookOpen size={14} /> View recipe (ingredients &amp; steps)
             </Link>
           )}
+          {extra && (
+            <div className="rounded-lg bg-tagBg text-tagText px-3 py-2 text-xs">
+              <div className="font-medium mb-0.5">
+                Plus: {extra.name} ({extra.servingSize} · {extra.caloriesPerServing} kcal)
+              </div>
+              <div>{extra.generalNote.note}</div>
+            </div>
+          )}
           <div>
-            <div className="font-medium mb-1 text-muted">Nutrients (per serving)</div>
+            <div className="font-medium mb-1 text-muted">
+              Nutrients {extra ? "(dish + extra, combined)" : "(per serving)"}
+            </div>
             <div className="flex flex-wrap gap-x-4 gap-y-1">
-              <span>Protein: {meal.macros.proteinG}g</span>
-              <span>Carbs: {meal.macros.carbsG}g</span>
-              <span>Fat: {meal.macros.fatG}g</span>
-              <span>Fibre: {meal.macros.fiberG}g</span>
+              <span>Protein: {meal.macros.proteinG + (extra?.macros.proteinG ?? 0)}g</span>
+              <span>Carbs: {meal.macros.carbsG + (extra?.macros.carbsG ?? 0)}g</span>
+              <span>Fat: {Math.round((meal.macros.fatG + (extra?.macros.fatG ?? 0)) * 10) / 10}g</span>
+              <span>Fibre: {meal.macros.fiberG + (extra?.macros.fiberG ?? 0)}g</span>
             </div>
           </div>
           <div>

@@ -233,15 +233,10 @@ export default function PlanPage() {
                     alternatives={getMealOptions(type, prefs.avoidIngredients, customRecipes)}
                     onSwap={(newId) => handleSwap(type, i, newId)}
                     dayIndex={i}
+                    extra={type === "snack" ? (topUp ?? undefined) : undefined}
                   />
                 ))}
               </div>
-
-              {topUp && (
-                <div className="mt-3">
-                  <MealCard meal={topUp} selectedConcerns={prefs.concerns} />
-                </div>
-              )}
 
               <div className="mt-3">
                 <input
