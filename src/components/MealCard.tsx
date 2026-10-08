@@ -38,13 +38,13 @@ export default function MealCard({
         <div>
           <div className="text-xs uppercase tracking-wide text-muted">{MEAL_TYPE_LABELS[meal.mealType]}</div>
           <div className="font-medium text-ink">{meal.name}</div>
-          <div className="text-xs mt-1 text-muted">
-            {meal.servingSize} · {meal.caloriesPerServing} kcal
-            {meal.portionScale && <span> · ~{meal.portionScale.toFixed(1)}× scaled</span>}
+          <div className="text-xs mt-1 text-muted min-h-[2.25rem]">
+            <div>
+              {meal.servingSize} · {meal.caloriesPerServing} kcal
+              {meal.portionScale && <span> · ~{meal.portionScale.toFixed(1)}× scaled</span>}
+            </div>
+            {extra && <div>+ {extra.name}: {extra.caloriesPerServing} kcal</div>}
           </div>
-          {extra && (
-            <div className="text-xs mt-1 text-muted">+ {extra.name}: {extra.caloriesPerServing} kcal</div>
-          )}
           {relevantTags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {relevantTags.map((tag) => (
