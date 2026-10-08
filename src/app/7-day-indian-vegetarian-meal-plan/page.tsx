@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SeoLandingPage from "@/components/SeoLandingPage";
+import { buildSampleWeek } from "@/lib/seoSampleWeek";
 
 export const metadata: Metadata = {
   title: "7-Day Indian Vegetarian Meal Plan (Free, Balanced)",
@@ -7,22 +8,12 @@ export const metadata: Metadata = {
     "A free, balanced 7-day Indian vegetarian meal plan — breakfast through dinner, with sourced nutrition notes and a grocery list. Personalize it to your own energy and protein needs.",
 };
 
-const SAMPLE_WEEK = [
-  { day: "Monday", breakfast: "Vegetable Besan Chilla", lunch: "Dal, Roti & Seasonal Sabzi", snack: "Roasted Chana", dinner: "Methi Thepla with Curd" },
-  { day: "Tuesday", breakfast: "Oats & Flaxseed Upma", lunch: "Rajma with Brown Rice", snack: "Fruit with Soaked Almonds", dinner: "Palak Paneer with Roti" },
-  { day: "Wednesday", breakfast: "Moong Dal Chilla with Spinach", lunch: "Curd Rice with Pomegranate", snack: "Chia & Curd Bowl", dinner: "Vegetable Khichdi" },
-  { day: "Thursday", breakfast: "Tofu Bhurji with Roti", lunch: "Vegetable Pulao with Raita", snack: "Sprouted Moong Chaat", dinner: "Jowar Roti with Lauki Sabzi" },
-  { day: "Friday", breakfast: "Ragi Porridge (Ragi Ganji)", lunch: "Soya Chunks Curry with Roti", snack: "Roasted Soy Nuts", dinner: "Mushroom Masala with Roti" },
-  { day: "Saturday", breakfast: "Vegetable Besan Chilla", lunch: "Dal, Roti & Seasonal Sabzi", snack: "Roasted Peanut Chaat", dinner: "Methi Thepla with Curd" },
-  { day: "Sunday", breakfast: "Oats & Flaxseed Upma", lunch: "Rajma with Brown Rice", snack: "Sweet Potato Chaat", dinner: "Palak Paneer with Roti" },
-];
-
 export default function SevenDayPlanLandingPage() {
   return (
     <SeoLandingPage
       h1="7-Day Indian Vegetarian Meal Plan"
       intro="A free, balanced sample week — breakfast through dinner, built from real Indian dishes with sourced nutrition notes. This is general information, not medical advice."
-      sampleWeek={SAMPLE_WEEK}
+      sampleWeek={buildSampleWeek()}
       whyBullets={[
         "Every meal combines a whole grain or legume with vegetables, so the week isn't carb- or protein-heavy by accident.",
         "Each dish's calories and macros are computed from its own ingredients, not a single guessed number.",

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SeoLandingPage from "@/components/SeoLandingPage";
+import { buildSampleWeek } from "@/lib/seoSampleWeek";
 
 export const metadata: Metadata = {
   title: "Iron-Rich Indian Vegetarian Diet Plan for Anemia (Free)",
@@ -7,22 +8,12 @@ export const metadata: Metadata = {
     "A free sample 7-day Indian vegetarian meal plan featuring iron-rich plant foods paired with vitamin C for better absorption. General information, not medical advice.",
 };
 
-const SAMPLE_WEEK = [
-  { day: "Monday", breakfast: "Moong Dal Chilla with Spinach", lunch: "Rajma with Brown Rice", snack: "Roasted Chana", dinner: "Palak Paneer with Roti" },
-  { day: "Tuesday", breakfast: "Moong Dal Chilla with Spinach", lunch: "Soya Chunks Curry with Roti", snack: "Roasted Chana", dinner: "Palak Paneer with Roti" },
-  { day: "Wednesday", breakfast: "Moong Dal Chilla with Spinach", lunch: "Rajma with Brown Rice", snack: "Roasted Chana", dinner: "Palak Paneer with Roti" },
-  { day: "Thursday", breakfast: "Moong Dal Chilla with Spinach", lunch: "Soya Chunks Curry with Roti", snack: "Roasted Chana", dinner: "Palak Paneer with Roti" },
-  { day: "Friday", breakfast: "Moong Dal Chilla with Spinach", lunch: "Rajma with Brown Rice", snack: "Roasted Chana", dinner: "Palak Paneer with Roti" },
-  { day: "Saturday", breakfast: "Moong Dal Chilla with Spinach", lunch: "Soya Chunks Curry with Roti", snack: "Roasted Chana", dinner: "Palak Paneer with Roti" },
-  { day: "Sunday", breakfast: "Moong Dal Chilla with Spinach", lunch: "Rajma with Brown Rice", snack: "Roasted Chana", dinner: "Palak Paneer with Roti" },
-];
-
 export default function IronRichLandingPage() {
   return (
     <SeoLandingPage
       h1="Iron-Rich Indian Vegetarian Diet Plan"
       intro="A free sample week built around plant-based iron sources (spinach, rajma, chana, soya) paired with vitamin C in the same meal to aid absorption. General information, not medical advice for diagnosed anemia."
-      sampleWeek={SAMPLE_WEEK}
+      sampleWeek={buildSampleWeek(["iron"])}
       whyBullets={[
         "Spinach, rajma, chana, and soya chunks all contribute non-heme (plant-based) iron through the week.",
         "Vitamin C sources (tomato in the same dish, for example) are paired with iron-rich ingredients in the same meal, since vitamin C helps the body absorb non-heme iron.",

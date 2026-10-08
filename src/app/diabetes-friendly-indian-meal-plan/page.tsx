@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SeoLandingPage from "@/components/SeoLandingPage";
+import { buildSampleWeek } from "@/lib/seoSampleWeek";
 
 export const metadata: Metadata = {
   title: "Diabetes-Friendly Indian Vegetarian Meal Plan (Free)",
@@ -7,22 +8,12 @@ export const metadata: Metadata = {
     "A free, blood-sugar-friendly 7-day Indian vegetarian meal plan — lower-glycemic whole grains and legumes, with sourced nutrition notes. Not a substitute for your doctor's advice.",
 };
 
-const SAMPLE_WEEK = [
-  { day: "Monday", breakfast: "Vegetable Besan Chilla", lunch: "Dal, Roti & Seasonal Sabzi", snack: "Roasted Chana", dinner: "Mushroom Masala with Roti" },
-  { day: "Tuesday", breakfast: "Ragi Porridge (Ragi Ganji)", lunch: "Rajma with Brown Rice", snack: "Sprouted Moong Chaat", dinner: "Vegetable Khichdi" },
-  { day: "Wednesday", breakfast: "Moong Dal Chilla with Spinach", lunch: "Dal, Roti & Seasonal Sabzi", snack: "Roasted Chana", dinner: "Mushroom Masala with Roti" },
-  { day: "Thursday", breakfast: "Tofu Bhurji with Roti", lunch: "Rajma with Brown Rice", snack: "Sprouted Moong Chaat", dinner: "Vegetable Khichdi" },
-  { day: "Friday", breakfast: "Vegetable Besan Chilla", lunch: "Dal, Roti & Seasonal Sabzi", snack: "Roasted Chana", dinner: "Mushroom Masala with Roti" },
-  { day: "Saturday", breakfast: "Ragi Porridge (Ragi Ganji)", lunch: "Rajma with Brown Rice", snack: "Sprouted Moong Chaat", dinner: "Vegetable Khichdi" },
-  { day: "Sunday", breakfast: "Moong Dal Chilla with Spinach", lunch: "Dal, Roti & Seasonal Sabzi", snack: "Roasted Chana", dinner: "Mushroom Masala with Roti" },
-];
-
 export default function DiabetesFriendlyLandingPage() {
   return (
     <SeoLandingPage
       h1="Diabetes-Friendly Indian Vegetarian Meal Plan"
       intro="A free sample week favoring lower-glycemic whole grains and legumes over refined carbohydrates. This describes a dietary pattern, not a treatment — please follow your doctor's or dietitian's specific guidance."
-      sampleWeek={SAMPLE_WEEK}
+      sampleWeek={buildSampleWeek(["diabetes"])}
       whyBullets={[
         "Favors lower-glycemic whole grains and legumes (besan, moong dal, ragi, jowar) over refined wheat or white rice.",
         "Pairs protein and fibre at each meal to moderate the blood-sugar response, rather than relying on any single \"diabetic\" ingredient.",
