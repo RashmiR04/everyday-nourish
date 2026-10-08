@@ -160,7 +160,7 @@ function KitchenView() {
             ].join("\n");
 
             return (
-              <div key={type} className="rounded-xl border border-line bg-card overflow-hidden">
+              <div key={type} className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={getMealPhoto(meal.name)} alt={meal.name} className="w-full h-32 object-cover" loading="lazy" />
                 <div className="px-4 py-3">
@@ -251,7 +251,7 @@ function KitchenView() {
           })}
         </div>
 
-        <div className="rounded-xl border border-line bg-card px-4 py-3">
+        <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-3">
           <div className="font-medium mb-2 flex items-center gap-1.5 text-ink">
             <ShoppingBasket size={16} className="text-accentDeep" /> For {isViewingToday ? "today" : DAYS[dayIndex]}
           </div>

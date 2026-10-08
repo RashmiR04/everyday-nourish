@@ -9,7 +9,7 @@ export default function BabyMealCard({ meal, dayLabel }: { meal: BabyMeal; dayLa
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="rounded-xl border border-line bg-card overflow-hidden">
+    <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
       <button onClick={() => setOpen(!open)} className="w-full text-left px-4 py-3 flex items-start justify-between gap-3">
         <div>
           <div className="text-xs uppercase tracking-wide text-muted">

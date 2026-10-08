@@ -24,7 +24,7 @@ export default function MealCard({
   const relevantTags = meal.concernTags.filter((t) => selectedConcerns.includes(t));
 
   return (
-    <div className="rounded-xl border border-line bg-card overflow-hidden">
+    <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={getMealPhoto(meal.name)}

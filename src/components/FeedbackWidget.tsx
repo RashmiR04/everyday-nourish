@@ -26,14 +26,14 @@ export default function FeedbackWidget({ context }: { context: string }) {
 
   if (submitted) {
     return (
-      <div className="rounded-xl border border-line bg-card px-4 py-3 text-sm text-ink">
+      <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-3 text-sm text-ink">
         Thanks — that helps us improve this.
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-line bg-card px-4 py-3 text-sm text-ink space-y-2">
+    <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-3 text-sm text-ink space-y-2">
       {!choice ? (
         <>
           <div className="font-medium">Was this useful?</div>
@@ -63,7 +63,7 @@ export default function FeedbackWidget({ context }: { context: string }) {
               placeholder="Tell us in a few words"
               className="flex-1 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
             />
-            <button onClick={submit} className="px-4 py-2 rounded-lg text-sm text-white bg-accentDeep">
+            <button onClick={submit} className="px-4 py-2 rounded-lg text-sm text-white bg-accentDeep hover:bg-accent transition-colors">
               Submit
             </button>
           </div>

@@ -117,7 +117,7 @@ export default function PlanPage() {
         </div>
 
         {prefs.concerns.length > 0 && (
-          <div className="rounded-xl border border-line bg-card px-4 py-3 text-sm text-ink">
+          <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-3 text-sm text-ink">
             <div className="font-medium mb-2">How this plan is adapted</div>
             <div className="space-y-2">
               {prefs.concerns.map((c) => (
@@ -182,7 +182,7 @@ export default function PlanPage() {
                 <ChefHat size={16} className="text-accentDeep" /> {day}
               </Link>
 
-              <div className="rounded-xl border border-line bg-card px-4 py-3 mb-3 text-sm text-ink">
+              <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-3 mb-3 text-sm text-ink">
                 <div className="font-medium mb-2">{day}&apos;s balance</div>
                 <div className="flex flex-wrap gap-2">
                   <BalanceItem ok={energyGood} label="Energy" />
@@ -198,7 +198,7 @@ export default function PlanPage() {
                 {suggestion && <div className="text-sm mt-2">{suggestion}</div>}
               </div>
 
-              <details className="rounded-xl border border-line bg-card px-4 py-3 mb-3 text-sm text-ink">
+              <details className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-3 mb-3 text-sm text-ink">
                 <summary className="font-medium cursor-pointer">Nutrition details</summary>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
                   <span>

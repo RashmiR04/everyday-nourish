@@ -36,7 +36,7 @@ export default function SeoLandingPage({
         <p className="text-sm text-muted">{intro}</p>
       </div>
 
-      <div className="rounded-xl border border-line bg-card divide-y divide-line">
+      <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 divide-y divide-line">
         {sampleWeek.map((d) => (
           <div key={d.day} className="px-4 py-3 text-sm text-ink">
             <div className="font-medium mb-1">{d.day}</div>
@@ -56,12 +56,12 @@ export default function SeoLandingPage({
         </ul>
       </div>
 
-      <div className="rounded-xl border border-line bg-card px-4 py-3">
+      <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-3">
         <div className="font-medium text-ink mb-1">Want this personalized to you?</div>
         <p className="text-sm text-muted mb-3">{ctaNote}</p>
         <Link
           href="/plan/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent hover:bg-accentDeep transition-colors"
         >
           <Sparkles size={16} /> Build your plan
         </Link>

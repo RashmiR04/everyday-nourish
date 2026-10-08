@@ -103,7 +103,7 @@ export default function MyRecipesPage() {
     <div>
       <Nav />
       <div className="space-y-6">
-        <div className="rounded-xl border border-line bg-card px-4 py-3 text-sm text-ink">
+        <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-3 text-sm text-ink">
           <div className="font-medium mb-1 flex items-center gap-1.5">
             <ChefHat size={16} className="text-accentDeep" /> Build a dish from known ingredients
           </div>
@@ -114,7 +114,7 @@ export default function MyRecipesPage() {
         </div>
 
         {recipes.length > 0 && (
-          <div className="rounded-xl border border-line bg-card divide-y divide-line">
+          <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 divide-y divide-line">
             {recipes.map((r) => (
               <div key={r.id} className="flex items-start justify-between gap-3 px-4 py-3">
                 <div>
@@ -136,12 +136,12 @@ export default function MyRecipesPage() {
         {!showForm ? (
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent hover:bg-accentDeep transition-colors"
           >
             <Plus size={16} /> Add a recipe
           </button>
         ) : (
-          <div className="rounded-xl border border-line bg-card px-4 py-4 space-y-4 text-sm text-ink">
+          <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-4 space-y-4 text-sm text-ink">
             <div>
               <label className="block text-xs mb-1 text-muted">Dish name</label>
               <input
@@ -261,7 +261,7 @@ export default function MyRecipesPage() {
               <button
                 onClick={handleSave}
                 disabled={!canSave}
-                className="px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent disabled:opacity-40"
+                className="px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent hover:bg-accentDeep transition-colors disabled:opacity-40 disabled:hover:bg-accent"
               >
                 Save recipe
               </button>

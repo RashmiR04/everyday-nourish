@@ -12,7 +12,7 @@ export default function HomePage() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-line bg-card p-5 space-y-3">
+      <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 p-5 space-y-3">
         <h2 className="font-display text-lg text-ink">What you get</h2>
         <ul className="text-sm text-ink space-y-1.5 list-disc list-inside">
           <li>A 7-day vegetarian meal plan, breakfast through dinner</li>
@@ -26,7 +26,7 @@ export default function HomePage() {
 
       <Link
         href="/plan/new"
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent hover:bg-accentDeep transition-colors"
       >
         <Sparkles size={16} /> Build my plan
       </Link>

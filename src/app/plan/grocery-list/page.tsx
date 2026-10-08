@@ -56,7 +56,7 @@ export default function GroceryListPage() {
           </span>
         </div>
 
-        <div className="rounded-xl border border-line bg-card divide-y divide-line">
+        <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 divide-y divide-line">
           {grocery.map((item) => (
             <div key={item.name} className="flex justify-between px-4 py-2.5 text-sm text-ink">
               <span>{item.name}</span>

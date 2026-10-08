@@ -81,7 +81,7 @@ export default function BabyPlanPage() {
               setStep("plan");
               track("baby_plan_viewed", { stage });
             }}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent hover:bg-accentDeep transition-colors"
           >
             <Sparkles size={16} /> View this stage&apos;s plan
           </button>
@@ -107,7 +107,7 @@ export default function BabyPlanPage() {
             How many of the 7 days this week&apos;s plan covers each key nutrient — not a guarantee of your
             baby&apos;s actual intake, just a guide to variety.
           </p>
-          <div className="rounded-xl border border-line bg-card divide-y divide-line">
+          <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 divide-y divide-line">
             {NUTRIENTS.map((n) => (
               <div key={n} className="flex items-center justify-between px-4 py-3 text-sm text-ink">
                 <span>{NUTRIENT_LABELS[n]}</span>

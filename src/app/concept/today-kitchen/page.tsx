@@ -6,7 +6,7 @@ import { track } from "@/lib/analytics";
 
 function Card({ title, icon, children }: { title: string; icon?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-line bg-card px-4 py-3">
+    <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-3">
       <div className="font-medium mb-2 flex items-center gap-1.5 text-ink">
         {icon} {title}
       </div>
@@ -105,13 +105,13 @@ export default function TodayKitchenConcept() {
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => track("concept_grocery_share_clicked")}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm text-white bg-accent"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm text-white bg-accent hover:bg-accentDeep transition-colors"
         >
           <Share2 size={14} /> Share list to WhatsApp
         </a>
       </Card>
 
-      <div className="rounded-xl border border-line bg-card px-4 py-4 text-sm text-ink space-y-3">
+      <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-4 text-sm text-ink space-y-3">
         {submitted ? (
           <div>Thank you — this is exactly the kind of honest reaction we needed.</div>
         ) : !reaction ? (
@@ -141,7 +141,7 @@ export default function TodayKitchenConcept() {
                 placeholder="Tell us in a few words"
                 className="flex-1 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
               />
-              <button onClick={submit} className="px-4 py-2 rounded-lg text-sm text-white bg-accentDeep">
+              <button onClick={submit} className="px-4 py-2 rounded-lg text-sm text-white bg-accentDeep hover:bg-accent transition-colors">
                 Submit
               </button>
             </div>

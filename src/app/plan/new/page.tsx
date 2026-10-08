@@ -177,7 +177,7 @@ export default function NewPlanPage() {
           </div>
 
           {selectedConcerns.length > 0 && (
-            <div className="rounded-xl border border-line bg-card px-4 py-3 mt-3 text-sm text-ink">
+            <div className="rounded-xl border border-line bg-card shadow-sm hover:shadow-md transition-shadow duration-200 px-4 py-3 mt-3 text-sm text-ink">
               <div className="font-medium mb-2">How this plan is adapted</div>
               <div className="space-y-2">
                 {selectedConcerns.map((c) => (
@@ -208,7 +208,7 @@ export default function NewPlanPage() {
               placeholder="e.g. paneer"
               className="flex-1 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
             />
-            <button onClick={addIngredient} className="px-4 py-2 rounded-lg text-sm text-white bg-accentDeep">
+            <button onClick={addIngredient} className="px-4 py-2 rounded-lg text-sm text-white bg-accentDeep hover:bg-accent transition-colors">
               Add
             </button>
           </div>
@@ -236,7 +236,7 @@ export default function NewPlanPage() {
               placeholder="e.g. mushroom"
               className="flex-1 px-3 py-2 rounded-lg border border-line bg-card text-ink text-sm"
             />
-            <button onClick={addAvoid} className="px-4 py-2 rounded-lg text-sm text-white bg-accentDeep">
+            <button onClick={addAvoid} className="px-4 py-2 rounded-lg text-sm text-white bg-accentDeep hover:bg-accent transition-colors">
               Add
             </button>
           </div>
@@ -316,7 +316,7 @@ export default function NewPlanPage() {
         <div className="flex items-center gap-4">
           <button
             onClick={buildPlan}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-sm font-medium bg-accent hover:bg-accentDeep transition-colors"
           >
             <Sparkles size={16} /> Build my plan
           </button>
