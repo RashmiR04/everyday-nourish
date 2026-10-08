@@ -40,9 +40,7 @@ export default function MealCard({
           <div className="font-medium text-ink">{meal.name}</div>
           <div className="text-xs mt-1 text-muted">
             {meal.servingSize} · {meal.caloriesPerServing} kcal
-            {meal.portionScale && (
-              <span> · portion scaled ~{meal.portionScale.toFixed(1)}× from the base recipe</span>
-            )}
+            {meal.portionScale && <span> · ~{meal.portionScale.toFixed(1)}× scaled</span>}
           </div>
           {extra && (
             <div className="text-xs mt-1 text-muted">+ {extra.name}: {extra.caloriesPerServing} kcal</div>
