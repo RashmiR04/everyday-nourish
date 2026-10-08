@@ -45,9 +45,7 @@ export default function MealCard({
             )}
           </div>
           {extra && (
-            <div className="text-xs mt-1 text-muted">
-              + {extra.name} — {extra.servingSize} · {extra.caloriesPerServing} kcal
-            </div>
+            <div className="text-xs mt-1 text-muted">+ {extra.name}: {extra.caloriesPerServing} kcal</div>
           )}
           {relevantTags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
