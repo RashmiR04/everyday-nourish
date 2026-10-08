@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronDown, ChevronUp, BookOpen } from "lucide-react";
 import { Meal, ConcernId } from "@/lib/types";
 import { MEAL_TYPE_LABELS, CONCERN_TAG_LABELS, MEAL_TYPE_TIMING_NOTE } from "@/lib/meals";
+import { getMealPhoto } from "@/lib/mealPhotos";
 
 export default function MealCard({
   meal,
@@ -24,6 +25,13 @@ export default function MealCard({
 
   return (
     <div className="rounded-xl border border-line bg-card overflow-hidden">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={getMealPhoto(meal.name)}
+        alt={meal.name}
+        className="w-full h-28 object-cover"
+        loading="lazy"
+      />
       <button onClick={() => setOpen(!open)} className="w-full text-left px-4 py-3 flex items-start justify-between gap-3">
         <div>
           <div className="text-xs uppercase tracking-wide text-muted">{MEAL_TYPE_LABELS[meal.mealType]}</div>

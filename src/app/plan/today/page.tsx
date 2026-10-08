@@ -10,6 +10,7 @@ import { MEAL_TYPES, MEAL_TYPE_LABELS, DAYS } from "@/lib/meals";
 import { BABY_STAGES } from "@/lib/babyMeals";
 import { BABY_ADAPTATION_NOTE, needsBabyCookStep } from "@/lib/babyAdaptation";
 import { buildDayGroceryList } from "@/lib/groceryList";
+import { getMealPhoto } from "@/lib/mealPhotos";
 import { loadPreferences, loadPlan } from "@/lib/storage";
 import { MealType, Preferences, WeekPlan } from "@/lib/types";
 import { track } from "@/lib/analytics";
@@ -159,7 +160,10 @@ function KitchenView() {
             ].join("\n");
 
             return (
-              <div key={type} className="rounded-xl border border-line bg-card px-4 py-3">
+              <div key={type} className="rounded-xl border border-line bg-card overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={getMealPhoto(meal.name)} alt={meal.name} className="w-full h-32 object-cover" loading="lazy" />
+                <div className="px-4 py-3">
                 <div className="text-xs uppercase tracking-wide text-muted">{MEAL_TYPE_LABELS[type]}</div>
                 <div className="font-medium text-ink">{meal.name}</div>
                 <div className="text-xs text-muted mt-1 flex items-center gap-3 flex-wrap">
@@ -241,6 +245,7 @@ function KitchenView() {
                     )}
                   </div>
                 </details>
+                </div>
               </div>
             );
           })}
